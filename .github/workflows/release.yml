@@ -5,6 +5,9 @@ on:
     types:
       - created
 
+permissions:
+  packages: write
+
 jobs:
   release:
     runs-on: ubuntu-20.04
@@ -26,6 +29,24 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           tox -e docker -- --tag=quay.io/ansible/ansible-navigator-demo-ee:${{ github.event.release.tag_name }}
+
+      - name: Push to GitHub Container Registry
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2.3.1
+        with:
+          image: quay.io/ansible/ansible-navigator-demo-ee
+          tags: >-
+            ${{ github.sha }}
+            ${{ github.event.release.tag_name }}
+            latest
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log the GHCR upload result
+        run: >-
+          echo
+          'New image has been pushed to
+          ${{ steps.push-to-ghcr.outputs.registry-paths }}'
 
       - name: Apply latest tag
         run: |
