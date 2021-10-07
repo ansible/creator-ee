@@ -1,4 +1,4 @@
-# Ansible Navigator Demo EE
+# Ansible Devtools Demo EE
 
 ## Regenerating the build context with podman:
 
