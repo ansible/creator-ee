@@ -28,13 +28,13 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          tox -e docker -- --tag=quay.io/ansible/ansible-navigator-demo-ee:${{ github.event.release.tag_name }}
+          tox -e docker -- --tag=quay.io/ansible/ansible-devtools-demo-ee:${{ github.event.release.tag_name }}
 
       - name: Push to GitHub Container Registry
         id: push-to-ghcr
         uses: redhat-actions/push-to-registry@v2.3.1
         with:
-          image: quay.io/ansible/ansible-navigator-demo-ee
+          image: quay.io/ansible/ansible-devtools-demo-ee
           tags: >-
             ${{ github.sha }}
             ${{ github.event.release.tag_name }}
@@ -50,10 +50,10 @@ jobs:
 
       - name: Apply latest tag
         run: |
-         docker tag quay.io/ansible/ansible-navigator-demo-ee:${{ github.event.release.tag_name }} quay.io/ansible/ansible-navigator-demo-ee:latest
+         docker tag quay.io/ansible/ansible-devtools-demo-ee:${{ github.event.release.tag_name }} quay.io/ansible/ansible-devtools-demo-ee:latest
 
       - name: Push images
         run: |
          echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u ${{ secrets.QUAY_USERNAME }} --password-stdin
-         docker push quay.io/ansible/ansible-navigator-demo-ee:${{ github.event.release.tag_name }}
-         docker push quay.io/ansible/ansible-navigator-demo-ee:latest
+         docker push quay.io/ansible/ansible-devtools-demo-ee:${{ github.event.release.tag_name }}
+         docker push quay.io/ansible/ansible-devtools-demo-ee:latest
