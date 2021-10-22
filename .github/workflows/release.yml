@@ -16,6 +16,11 @@ jobs:
 
     env:
       TOXENV: ${{ matrix.toxenv }}
+      UNIQUE_IMAGE_TAG: >-
+        ${{ github.sha }}-${{
+        github.run_id }}-${{
+        github.run_number }}-${{
+        github.run_attempt }}
 
     steps:
     - name: Grab the source from Git
@@ -41,12 +46,25 @@ jobs:
         python -m tox
         --skip-missing-interpreters false
         --
-        --tag=ghcr.io/${{ github.repository }}:${{ github.sha }}
-        --tag=ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
-        --tag=ghcr.io/${{ github.repository }}:latest
-        --tag=quay.io/${{ github.repository }}:${{ github.sha }}
-        --tag=quay.io/${{ github.repository }}:${{ github.event.release.tag_name }}
-        --tag=quay.io/${{ github.repository }}:latest
+        --tag=${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
+
+    - name: Apply requested tags to the image
+      run: |
+        sh -x
+
+        for registry in ghcr quay
+        do
+          for tag in \
+            '${{ github.sha }}' \
+            '${{ github.event.release.tag_name }}' \
+            latest
+          do
+            docker tag \
+              '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
+              "${registry}.io/${{ github.repository }}:${tag}"
+          done
+        done
+        sh +x
 
     - name: Push to GitHub Container Registry
       id: push-to-ghcr
@@ -54,6 +72,7 @@ jobs:
       with:
         image: ${{ github.repository }}
         tags: >-
+          ${{ env.UNIQUE_IMAGE_TAG }}
           ${{ github.sha }}
           ${{ github.event.release.tag_name }}
           latest
@@ -72,6 +91,7 @@ jobs:
       with:
         image: ${{ github.repository }}
         tags: >-
+          ${{ env.UNIQUE_IMAGE_TAG }}
           ${{ github.sha }}
           ${{ github.event.release.tag_name }}
           latest
