@@ -66,6 +66,12 @@ jobs:
         done
         sh +x
 
+    - name: Log local Docker images
+      run: docker images
+
+    - name: Log local Podman images
+      run: podman images
+
     - name: Push to GitHub Container Registry
       id: push-to-ghcr
       uses: redhat-actions/push-to-registry@v2.3.1
