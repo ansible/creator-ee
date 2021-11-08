@@ -37,9 +37,9 @@ jobs:
     - name: Install tox
       run: python -m pip install tox
 
-    - name: Prepare ${{ matrix.toxenv }} tox testenv
+    - name: Prepare ${{ env.TOXENV }} tox testenv
       run: tox --skip-missing-interpreters false --notest
 
-    - name: Run ${{ matrix.toxenv }} tox testenv
+    - name: Run ${{ env.TOXENV }} tox testenv
       run: tox --skip-missing-interpreters false
 ...
