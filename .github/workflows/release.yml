@@ -5,8 +5,7 @@ on:
     types:
     - created
 
-permissions:
-  packages: write
+permissions: none
 
 jobs:
   release:
@@ -21,6 +20,9 @@ jobs:
         github.run_id }}-${{
         github.run_number }}-${{
         github.run_attempt }}
+
+    permissions:
+      packages: write
 
     steps:
     - name: Grab the source from Git
