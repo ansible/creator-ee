@@ -8,10 +8,11 @@ on:
 permissions: none
 
 jobs:
-  release:
-    name: Release ${{ github.event.release.tag_name }}
+  ghcr:
+    name: >-
+      Release ${{ github.event.release.tag_name }}
+      to GitHub Container Registry
     runs-on: ubuntu-20.04
-    environment: release
 
     env:
       TOXENV: podman,check-diff
@@ -53,18 +54,16 @@ jobs:
       run: |
         sh -x
 
-        for registry in ghcr quay
+        for tag in \
+          '${{ github.sha }}' \
+          '${{ github.event.release.tag_name }}' \
+          latest
         do
-          for tag in \
-            '${{ github.sha }}' \
-            '${{ github.event.release.tag_name }}' \
-            latest
-          do
-            podman tag \
-              '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
-              "${registry}.io/${{ github.repository }}:${tag}"
-          done
+          podman tag \
+            '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
+            "ghcr.io/${{ github.repository }}:${tag}"
         done
+
         sh +x
 
     - name: Push to GitHub Container Registry
@@ -85,6 +84,49 @@ jobs:
         echo
         'New image has been pushed to
         ${{ steps.push-to-ghcr.outputs.registry-paths }}'
+
+  quay:
+    name: >-
+      Release ${{ github.event.release.tag_name }}
+      to Quay.io
+    runs-on: ubuntu-20.04
+    environment:
+      name: release
+      url: >-
+        https://quay.io/repository/${{
+          github.repository
+        }}?tab=tags&tag=${{
+          github.event.release.tag_name
+        }}
+
+    env:
+      TOXENV: podman,check-diff
+      UNIQUE_IMAGE_TAG: >-
+        ${{ github.sha }}-${{
+        github.run_id }}-${{
+        github.run_number }}-${{
+        github.run_attempt }}
+
+    steps:
+    - name: Fetch the pre-published image from GHCR
+      run: >-
+        podman pull \
+          ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
+    - name: Apply requested tags to the image
+      run: |
+        sh -x
+
+        for tag in \
+          '${{ github.sha }}' \
+          '${{ github.event.release.tag_name }}' \
+          latest
+        do
+          podman tag \
+            'ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
+            "quay.io/${{ github.repository }}:${tag}"
+        done
+
+        sh +x
 
     - name: Push to Quay Container Registry
       id: push-to-quay
