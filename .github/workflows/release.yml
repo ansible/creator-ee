@@ -5,7 +5,7 @@ on:
     types:
     - created
 
-permissions: none
+permissions: {}
 
 jobs:
   ghcr:
