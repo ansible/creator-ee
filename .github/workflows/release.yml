@@ -99,6 +99,8 @@ jobs:
     name: >-
       Release ${{ github.event.release.tag_name }}
       to Quay.io
+    needs:
+    - ghcr
     runs-on: ubuntu-20.04
     environment:
       name: release
