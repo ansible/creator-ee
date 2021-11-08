@@ -15,7 +15,7 @@ jobs:
     environment: release
 
     env:
-      TOXENV: ${{ matrix.toxenv }}
+      TOXENV: podman,check-diff
       UNIQUE_IMAGE_TAG: >-
         ${{ github.sha }}-${{
         github.run_id }}-${{
@@ -34,15 +34,13 @@ jobs:
     - name: Install tox
       run: python -m pip install tox --user
 
-    - name: Prepare ${{ matrix.toxenv }} tox testenv
+    - name: Prepare ${{ env.TOXENV }} tox testenvs
       run: >-
         python -m tox
         --skip-missing-interpreters false
         --notest
 
     - name: Build image
-      env:
-        DOCKER_BUILDKIT: 1
       run: >-
         python -m tox
         --skip-missing-interpreters false
@@ -60,18 +58,12 @@ jobs:
             '${{ github.event.release.tag_name }}' \
             latest
           do
-            docker tag \
+            podman tag \
               '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
               "${registry}.io/${{ github.repository }}:${tag}"
           done
         done
         sh +x
-
-    - name: Log local Docker images
-      run: docker images
-
-    - name: Log local Podman images
-      run: podman images
 
     - name: Push to GitHub Container Registry
       id: push-to-ghcr
