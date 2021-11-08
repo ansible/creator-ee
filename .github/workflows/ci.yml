@@ -21,10 +21,9 @@ jobs:
         toxenv:
         - podman
         - docker
-        - check-diff
 
     env:
-      TOXENV: ${{ matrix.toxenv }}
+      TOXENV: ${{ matrix.toxenv }},check-diff
 
     steps:
     - name: Grab the source from Git
