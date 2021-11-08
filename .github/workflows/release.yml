@@ -20,8 +20,6 @@ jobs:
           github.repository
         }}/pkgs/container/${{
           github.event.repository.name
-        }}/9983131?tag=${{
-          github.event.release.tag_name
         }}
 
     env:
