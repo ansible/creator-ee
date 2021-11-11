@@ -1,8 +1,8 @@
 # Ansible DevTools Execution Environment
 
 This is a container (execution environment) aimed towards being used
-for development and testing of the Ansible content. We should also mention that
-this container should not be used in production by Ansible users.
+for development and testing of the Ansible content. We should also mention
+that this container must not be used in production by Ansible users.
 
 It includes:
 
