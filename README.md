@@ -10,7 +10,8 @@ It includes:
 * ansible-lint
 * molecule
 
-Among its main consumers we can mention [ansible-navigator] and [vscode-ansible] extension.
+Among its main consumers, we can mention [ansible-navigator] and
+[vscode-ansible] extension.
 
 [ansible-navigator]: https://github.com/ansible/ansible-navigator
 [vscode-ansible]: https://github.com/ansible/vscode-ansible
