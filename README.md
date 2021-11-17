@@ -1,4 +1,4 @@
-# Ansible DevTools Execution Environment
+# Ansible Creator Execution Environment
 
 This is a container (execution environment) aimed towards being used
 for development and testing of the Ansible content. We should also mention
