@@ -6,5 +6,5 @@ dependencies:
 additional_build_steps:
   append:
     - RUN alternatives --set python /usr/bin/python3
-    - RUN pip install ansible-lint
+    - RUN pip install 'ansible-lint>=5.3.2'
     - RUN pip install molecule
