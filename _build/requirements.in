@@ -1,0 +1,8 @@
+# Some indirect dependencies are added here in order to keep the `tox -e deps`
+# produce same output when run on both linux and macos.
+ansible-core>=2.12
+ansible-lint>=5.3.1
+distro  # indirect
+molecule>=3.5.2
+selinux  # indirect
+yamllint>=1.26.3
