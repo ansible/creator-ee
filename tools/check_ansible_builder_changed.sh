@@ -11,4 +11,3 @@ if [ "$DIRTY" -ne 0 ]; then
     git diff
     exit 1
 fi
-
