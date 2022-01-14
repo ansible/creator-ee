@@ -31,11 +31,11 @@ jobs:
         toxenv:
         - lint
         - deps
-        - podman
-        - docker
+        - podman,check-diff
+        - docker,check-diff
 
     env:
-      TOXENV: ${{ matrix.toxenv }},check-diff
+      TOXENV: ${{ matrix.toxenv }}
 
     steps:
     - name: Grab the source from Git
