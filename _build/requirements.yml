@@ -5,6 +5,7 @@ collections:
   - name: ansible.windows
   - name: awx.awx
   - name: azure.azcollection
+  - name: community.docker
   - name: community.vmware
   - name: google.cloud
   - name: kubernetes.core
