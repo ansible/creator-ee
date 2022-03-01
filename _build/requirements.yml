@@ -6,6 +6,7 @@ collections:
   - name: awx.awx
   - name: azure.azcollection
   - name: community.vmware
+  - name: containers.podman
   - name: google.cloud
   - name: kubernetes.core
   - name: openstack.cloud
