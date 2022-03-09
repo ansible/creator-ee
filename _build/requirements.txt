@@ -5,5 +5,6 @@ ansible-lint>=5.3.1
 distro  # indirect
 molecule>=3.5.2
 molecule-docker>=1.0.1
+molecule-podman==1.1.0
 selinux  # indirect
 yamllint>=1.26.3
