@@ -30,7 +30,6 @@ jobs:
       matrix:
         toxenv:
         - lint
-        - deps
         - podman,check-diff
         - docker,check-diff
 
