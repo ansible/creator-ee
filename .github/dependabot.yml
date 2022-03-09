@@ -1,27 +1,8 @@
 version: 2
 updates:
-  # important dependencies that need to go into release notes
   - package-ecosystem: pip
     directory: /_build
     schedule:
       interval: daily
     labels:
       - dependabot-deps-updates
-    open-pull-requests-limit: 2
-    allow:
-      - dependency-name: ansible-core
-      - dependency-name: ansible-lint
-      - dependency-name: molecule
-  # other dependencies that do not worth being mentioned in release notes
-  - package-ecosystem: pip
-    directory: /_build
-    schedule:
-      interval: daily
-    labels:
-      - dependabot-deps-updates
-      - skip-changelog
-    open-pull-requests-limit: 2
-    ignore:
-      - dependency-name: ansible-core
-      - dependency-name: ansible-lint
-      - dependency-name: molecule
