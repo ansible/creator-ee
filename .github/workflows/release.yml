@@ -3,7 +3,7 @@ name: Release
 on:
   release:
     types:
-    - created
+      - created
 
 permissions: {}
 
@@ -34,71 +34,71 @@ jobs:
       packages: write
 
     steps:
-    - name: Grab the source from Git
-      uses: actions/checkout@v2
+      - name: Grab the source from Git
+        uses: actions/checkout@v2
 
-    - name: Set Python version to 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
+      - name: Set Python version to 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
 
-    - name: Install tox
-      run: python -m pip install tox --user
+      - name: Install tox
+        run: python -m pip install tox --user
 
-    - name: Prepare ${{ env.TOXENV }} tox testenvs
-      run: >-
-        python -m tox
-        --skip-missing-interpreters false
-        --notest
+      - name: Prepare ${{ env.TOXENV }} tox testenvs
+        run: >-
+          python -m tox
+          --skip-missing-interpreters false
+          --notest
 
-    - name: Build image
-      run: >-
-        python -m tox
-        --skip-missing-interpreters false
-        --
-        --tag=${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
+      - name: Build image
+        run: >-
+          python -m tox
+          --skip-missing-interpreters false
+          --
+          --tag=${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
 
-    - name: Apply requested tags to the image
-      run: |
-        sh -x
+      - name: Apply requested tags to the image
+        run: |
+          sh -x
 
-        for tag in \
-          '${{ github.sha }}' \
-          '${{ github.event.release.tag_name }}' \
-          latest
-        do
-          podman tag \
-            '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
-            "ghcr.io/${{ github.repository }}:${tag}"
-        done
+          for tag in \
+            '${{ github.sha }}' \
+            '${{ github.event.release.tag_name }}' \
+            latest
+          do
+            podman tag \
+              '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
+              "ghcr.io/${{ github.repository }}:${tag}"
+          done
 
-        sh +x
+          sh +x
 
-    - name: Push to GitHub Container Registry
-      id: push-to-ghcr
-      uses: redhat-actions/push-to-registry@v2.3.1
-      with:
-        image: ${{ github.repository }}
-        tags: >-
-          ${{ env.UNIQUE_IMAGE_TAG }}
-          ${{ github.sha }}
-          ${{ github.event.release.tag_name }}
-          latest
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Log the GHCR upload result
-      run: >-
-        echo
-        'New image has been pushed to
-        ${{ steps.push-to-ghcr.outputs.registry-paths }}'
+      - name: Push to GitHub Container Registry
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2.3.1
+        with:
+          image: ${{ github.repository }}
+          tags: >-
+            ${{ env.UNIQUE_IMAGE_TAG }}
+            ${{ github.sha }}
+            ${{ github.event.release.tag_name }}
+            latest
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log the GHCR upload result
+        run: >-
+          echo
+          'New image has been pushed to
+          ${{ steps.push-to-ghcr.outputs.registry-paths }}'
 
   quay:
     name: >-
       Release ${{ github.event.release.tag_name }}
       to Quay.io
     needs:
-    - ghcr
+      - ghcr
     runs-on: ubuntu-20.04
     environment:
       name: release
@@ -118,41 +118,41 @@ jobs:
         github.run_attempt }}
 
     steps:
-    - name: Fetch the pre-published image from GHCR
-      run: >-
-        podman pull \
-          ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
-    - name: Apply requested tags to the image
-      run: |
-        sh -x
+      - name: Fetch the pre-published image from GHCR
+        run: >-
+          podman pull \
+            ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
+      - name: Apply requested tags to the image
+        run: |
+          sh -x
 
-        for tag in \
-          '${{ github.sha }}' \
-          '${{ github.event.release.tag_name }}' \
-          latest
-        do
-          podman tag \
-            'ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
-            "quay.io/${{ github.repository }}:${tag}"
-        done
+          for tag in \
+            '${{ github.sha }}' \
+            '${{ github.event.release.tag_name }}' \
+            latest
+          do
+            podman tag \
+              'ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
+              "quay.io/${{ github.repository }}:${tag}"
+          done
 
-        sh +x
+          sh +x
 
-    - name: Push to Quay Container Registry
-      id: push-to-quay
-      uses: redhat-actions/push-to-registry@v2.3.1
-      with:
-        image: ${{ github.repository }}
-        tags: >-
-          ${{ env.UNIQUE_IMAGE_TAG }}
-          ${{ github.sha }}
-          ${{ github.event.release.tag_name }}
-          latest
-        registry: quay.io
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_TOKEN }}
-    - name: Log the Quay upload result
-      run: >-
-        echo
-        'New image has been pushed to
-        ${{ steps.push-to-quay.outputs.registry-paths }}'
+      - name: Push to Quay Container Registry
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2.3.1
+        with:
+          image: ${{ github.repository }}
+          tags: >-
+            ${{ env.UNIQUE_IMAGE_TAG }}
+            ${{ github.sha }}
+            ${{ github.event.release.tag_name }}
+            latest
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+      - name: Log the Quay upload result
+        run: >-
+          echo
+          'New image has been pushed to
+          ${{ steps.push-to-quay.outputs.registry-paths }}'

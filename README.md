@@ -6,9 +6,9 @@ that this container must not be used in production by Ansible users.
 
 It includes:
 
-* [ansible-core]
-* [ansible-lint]
-* [molecule]
+- [ansible-core]
+- [ansible-lint]
+- [molecule]
 
 Among its main consumers, we can mention [ansible-navigator] and
 [vscode-ansible] extension.
