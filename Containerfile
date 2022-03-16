@@ -28,3 +28,13 @@ COPY --from=galaxy /usr/share/ansible /usr/share/ansible
 COPY --from=builder /output/ /output/
 RUN /output/install-from-bindep && rm -rf /output/wheels
 RUN alternatives --set python /usr/bin/python3
+RUN dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+RUN dnf config-manager --set-disabled docker-ce-stable
+RUN rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.5.10-3.1.el8.x86_64.rpm
+RUN dnf --assumeyes --enablerepo=docker-ce-stable install docker-ce
+RUN molecule --version
+RUN molecule drivers
+RUN ansible-lint --version
+RUN docker --version
+RUN podman --version
+RUN git --version
