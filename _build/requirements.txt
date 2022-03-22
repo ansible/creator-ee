@@ -1,7 +1,7 @@
 ansible-lint==6.0.1
-molecule>=3.5.2
+molecule==3.6.1
 molecule-containers==1.0.2
 molecule-docker==1.1.0
 molecule-openstack==0.3
 molecule-podman==1.1.0
-yamllint>=1.26.3
+yamllint==1.26.3
