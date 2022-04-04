@@ -21,7 +21,7 @@ repos:
         language_version: python3
   - repo: https://github.com/pre-commit/mirrors-prettier
     # keep it before yamllint
-    rev: v2.5.1
+    rev: v2.6.2
     hooks:
       - id: prettier
   - repo: https://github.com/codespell-project/codespell
