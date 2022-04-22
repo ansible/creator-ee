@@ -40,7 +40,6 @@ RUN set -ex \
   && rm -rf /var/cache/{dnf,yum} \
   && rm -rf /var/lib/dnf/history.* \
   && rm -rf /var/log/*
-
 # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
 RUN set -ex \
   && molecule --version \
@@ -50,4 +49,3 @@ RUN set -ex \
   && podman --version \
   && python --version \
   && git --version
-
