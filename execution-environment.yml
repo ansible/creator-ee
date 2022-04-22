@@ -8,16 +8,26 @@ dependencies:
 additional_build_steps:
   append:
     - RUN alternatives --set python /usr/bin/python3
-    - RUN dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-    - RUN dnf config-manager --set-disabled docker-ce-stable
-    #  This is a workaround due to a conflict between the packaged version of runc in the containerd.io package from Docker and the CentOS 8 Stream native
-    #  version packaged for Podman and Skopeo. This can be changed once https://github.com/docker/containerd-packaging/pull/231 is merged and available
-    #  upstream via the Docker repository. Cudos for the workaround: https://faun.pub/how-to-install-simultaneously-docker-and-podman-on-rhel-8-centos-8-cb67412f321e
-    - RUN rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.5.10-3.1.el8.x86_64.rpm
-    - RUN dnf --assumeyes --enablerepo=docker-ce-stable install docker-ce
-    - RUN molecule --version
-    - RUN molecule drivers
-    - RUN ansible-lint --version
-    - RUN docker --version
-    - RUN podman --version
-    - RUN git --version
+    - |-
+      RUN set -ex \
+        && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
+        && dnf config-manager --set-disabled docker-ce-stable \
+      #  This is a workaround due to a conflict between the packaged version of runc in the containerd.io package from Docker and the CentOS 8 Stream native
+      #  version packaged for Podman and Skopeo. This can be changed once https://github.com/docker/containerd-packaging/pull/231 is merged and available
+      #  upstream via the Docker repository. Cudos for the workaround: https://faun.pub/how-to-install-simultaneously-docker-and-podman-on-rhel-8-centos-8-cb67412f321e
+        && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.5.10-3.1.el8.x86_64.rpm \
+        && dnf --assumeyes --enablerepo=docker-ce-stable install docker-ce \
+        && dnf clean all \
+        && rm -rf /var/cache/{dnf,yum} \
+        && rm -rf /var/lib/dnf/history.* \
+        && rm -rf /var/log/*
+    - |-
+      # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
+      RUN set -ex \
+        && molecule --version \
+        && molecule drivers \
+        && ansible-lint --version \
+        && docker --version \
+        && podman --version \
+        && python --version \
+        && git --version
