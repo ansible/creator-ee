@@ -9,7 +9,7 @@ ci:
     for more information, see https://pre-commit.ci
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
-    rev: v4.1.0
+    rev: v4.2.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
