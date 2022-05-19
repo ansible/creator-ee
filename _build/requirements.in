@@ -1,5 +1,5 @@
 # Used to help dependabot bump the lock file
-ansible-lint>=6.0.2
+ansible-lint>=6.2.1
 molecule>=3.6.1
 molecule-containers>=1.0.2
 molecule-docker>=1.1.0
