@@ -30,8 +30,8 @@ jobs:
       matrix:
         toxenv:
           - lint
-          - podman,check-diff
-          - docker,check-diff
+          - podman
+          - docker
 
     env:
       TOXENV: ${{ matrix.toxenv }}
