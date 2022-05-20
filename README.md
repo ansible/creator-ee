@@ -14,7 +14,7 @@ Among its main consumers, we can mention [ansible-navigator] and
 [vscode-ansible] extension.
 
 [ansible-core]: https://github.com/ansible/ansible
-[ansible-lint]: https://github.com/ansible-community/ansible-lint
+[ansible-lint]: https://github.com/ansible/ansible-lint
 [ansible-navigator]: https://github.com/ansible/ansible-navigator
 [molecule]: https://github.com/ansible-community/molecule
 [vscode-ansible]: https://github.com/ansible/vscode-ansible

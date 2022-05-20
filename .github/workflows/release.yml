@@ -1,4 +1,4 @@
-name: Release
+name: tox
 
 on:
   release:
@@ -9,26 +9,15 @@ permissions: {}
 
 jobs:
   ghcr:
-    name: >-
-      Release ${{ github.event.release.tag_name }}
-      to GitHub Container Registry
+    name: Release ${{ github.event.release.tag_name }} to GitHub Container Registry
     runs-on: ubuntu-20.04
     environment:
       name: ghcr-release
-      url: >-
-        https://github.com/${{
-          github.repository
-        }}/pkgs/container/${{
-          github.event.repository.name
-        }}
+      url: https://github.com/${{ github.repository }}/pkgs/container/${{ github.event.repository.name }}
 
     env:
       TOXENV: podman
-      UNIQUE_IMAGE_TAG: >-
-        ${{ github.sha }}-${{
-        github.run_id }}-${{
-        github.run_number }}-${{
-        github.run_attempt }}
+      UNIQUE_IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
 
     permissions:
       packages: write
@@ -46,10 +35,7 @@ jobs:
         run: python -m pip install tox --user
 
       - name: Prepare ${{ env.TOXENV }} tox testenvs
-        run: >-
-          python -m tox
-          --skip-missing-interpreters false
-          --notest
+        run: python -m tox --skip-missing-interpreters false --notest
 
       - name: Build image
         run: >-
@@ -79,49 +65,29 @@ jobs:
         uses: redhat-actions/push-to-registry@v2.3.1
         with:
           image: ${{ github.repository }}
-          tags: >-
-            ${{ env.UNIQUE_IMAGE_TAG }}
-            ${{ github.sha }}
-            ${{ github.event.release.tag_name }}
-            latest
+          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }} latest
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Log the GHCR upload result
-        run: >-
-          echo
-          'New image has been pushed to
-          ${{ steps.push-to-ghcr.outputs.registry-paths }}'
+        run: echo 'New image has been pushed to ${{ steps.push-to-ghcr.outputs.registry-paths }}'
 
   quay:
-    name: >-
-      Release ${{ github.event.release.tag_name }}
-      to Quay.io
+    name: Release ${{ github.event.release.tag_name }} to quay.io
     needs:
       - ghcr
     runs-on: ubuntu-20.04
     environment:
       name: release
-      url: >-
-        https://quay.io/repository/${{
-          github.repository
-        }}?tab=tags&tag=${{
-          github.event.release.tag_name
-        }}
+      url: https://quay.io/repository/${{ github.repository }}?tab=tags&tag=${{ github.event.release.tag_name }}
 
     env:
       TOXENV: podman,check
-      UNIQUE_IMAGE_TAG: >-
-        ${{ github.sha }}-${{
-        github.run_id }}-${{
-        github.run_number }}-${{
-        github.run_attempt }}
+      UNIQUE_IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
 
     steps:
       - name: Fetch the pre-published image from GHCR
-        run: >-
-          podman pull \
-            ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
+        run: podman pull ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
       - name: Apply requested tags to the image
         run: |
           sh -x
@@ -143,16 +109,9 @@ jobs:
         uses: redhat-actions/push-to-registry@v2.3.1
         with:
           image: ${{ github.repository }}
-          tags: >-
-            ${{ env.UNIQUE_IMAGE_TAG }}
-            ${{ github.sha }}
-            ${{ github.event.release.tag_name }}
-            latest
+          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }}latest
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
       - name: Log the Quay upload result
-        run: >-
-          echo
-          'New image has been pushed to
-          ${{ steps.push-to-quay.outputs.registry-paths }}'
+        run: echo 'New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}'
