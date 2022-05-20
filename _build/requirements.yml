@@ -5,7 +5,8 @@ collections:
   - name: ansible.windows
   - name: awx.awx
   - name: azure.azcollection
-  - name: community.docker
+  # Removed due to its dependency on unmaintained docker-compose python package
+  # - name: community.docker
   - name: community.vmware
   - name: containers.podman
   - name: google.cloud
