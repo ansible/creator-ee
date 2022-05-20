@@ -23,7 +23,7 @@ jobs:
         }}
 
     env:
-      TOXENV: podman,check-diff
+      TOXENV: podman
       UNIQUE_IMAGE_TAG: >-
         ${{ github.sha }}-${{
         github.run_id }}-${{
@@ -110,7 +110,7 @@ jobs:
         }}
 
     env:
-      TOXENV: podman,check-diff
+      TOXENV: podman,check
       UNIQUE_IMAGE_TAG: >-
         ${{ github.sha }}-${{
         github.run_id }}-${{
