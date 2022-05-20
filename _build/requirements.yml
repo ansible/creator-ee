@@ -1,17 +1,9 @@
 ---
 collections:
-  - name: amazon.aws
   - name: ansible.posix
   - name: ansible.windows
   - name: awx.awx
-  - name: azure.azcollection
-  # Removed due to its dependency on unmaintained docker-compose python package
-  # - name: community.docker
-  - name: community.vmware
   - name: containers.podman
-  - name: google.cloud
   - name: kubernetes.core
-  - name: openstack.cloud
-  - name: ovirt.ovirt
   - name: redhatinsights.insights
   - name: theforeman.foreman

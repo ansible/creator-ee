@@ -1,8 +1,5 @@
 # Used to help dependabot bump the lock file
 ansible-lint>=6.2.1
 molecule>=3.6.1
-# molecule-containers>=1.0.2 # removed due to molecule-docker being removed
-# molecule-docker>=1.1.0 # removed due to requiring docker-compose<2.0.0
-molecule-openstack>=0.3
 molecule-podman>=2.0.0
 yamllint>=1.26.3
