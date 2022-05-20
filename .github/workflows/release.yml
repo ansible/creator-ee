@@ -1,4 +1,4 @@
-name: tox
+name: release
 
 on:
   release:
