@@ -1,4 +1,4 @@
-ansible-lint==6.0.2
+ansible-lint==6.2.1
 molecule==3.6.1
 molecule-openstack==0.3
 molecule-podman==2.0.0
