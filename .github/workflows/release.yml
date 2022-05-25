@@ -109,7 +109,7 @@ jobs:
         uses: redhat-actions/push-to-registry@v2.3.1
         with:
           image: ${{ github.repository }}
-          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }}latest
+          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }} latest
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
