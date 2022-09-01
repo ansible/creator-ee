@@ -6,5 +6,5 @@ updates:
       interval: daily
     labels:
       - dependabot-deps-updates
-    allowed:
+    allow:
       - dependency-type: all
