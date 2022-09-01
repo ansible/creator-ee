@@ -21,7 +21,7 @@ idna==3.3
 iniconfig==1.1.1
 jinja2==3.1.2
 jinja2-time==0.2.0
-jsonschema==4.6.0
+jsonschema==4.15.0
 markupsafe==2.1.1
 molecule==4.0.0
 molecule-podman==2.0.0
