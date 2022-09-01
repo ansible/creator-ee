@@ -6,4 +6,3 @@ collections:
   - name: containers.podman
   - name: kubernetes.core
   - name: redhatinsights.insights
-  - name: theforeman.foreman
