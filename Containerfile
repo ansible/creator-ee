@@ -27,7 +27,7 @@ COPY --from=galaxy /usr/share/ansible /usr/share/ansible
 
 COPY --from=builder /output/ /output/
 RUN /output/install-from-bindep && rm -rf /output/wheels
-RUN alternatives --set python /usr/bin/python3
+RUN set -ex && /output/install-from-bindep && rm -rf /output/wheels && alternatives --set python /usr/bin/python3 && dnf -y upgrade && dnf autoremove
 # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
 RUN set -ex \
   && molecule --version \
