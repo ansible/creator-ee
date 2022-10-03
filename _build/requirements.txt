@@ -28,6 +28,7 @@ molecule==4.0.1
 molecule-podman==2.0.3
 mypy-extensions==0.4.3
 packaging==21.3
+paramiko==2.11.0
 pathspec==0.10.1
 platformdirs==2.5.2
 pluggy==1.0.0
