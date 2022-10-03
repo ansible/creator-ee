@@ -1,6 +1,6 @@
 ansible-compat==2.2.1
 ansible-core==2.13.4
-ansible-lint==6.8.0b2
+ansible-lint==6.8.0b3
 arrow==1.2.3
 attrs==22.1.0
 binaryornot==0.4.4
