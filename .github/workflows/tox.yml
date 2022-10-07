@@ -30,6 +30,7 @@ jobs:
 
     env:
       TOXENV: ${{ matrix.toxenv }}
+      EXTRA_OPTS: --platform linux/amd64,linux/arm64
 
     steps:
       - name: Grab the source from Git
@@ -38,10 +39,13 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           # keep this in sync with python version from base container
-          python-version: "3.8"
+          python-version: "3.10" # 3.10 is default on ubuntu-22.04
 
-      - name: Install tox
-        run: python -m pip install tox
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 qemu-user-static
+          python -m pip install tox
 
       - name: Prepare ${{ env.TOXENV }} tox testenv
         run: tox --skip-missing-interpreters false --notest
