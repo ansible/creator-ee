@@ -1,117 +1,40 @@
 name: release
-
 on:
   release:
     types:
       - published
-
+  workflow_dispatch:
 permissions: {}
 
 jobs:
-  ghcr:
-    name: Release ${{ github.event.release.tag_name }} to GitHub Container Registry
-    runs-on: ubuntu-20.04
-    environment:
-      name: ghcr-release
-      url: https://github.com/${{ github.repository }}/pkgs/container/${{ github.event.repository.name }}
-
-    env:
-      TOXENV: podman
-      UNIQUE_IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
-
-    permissions:
-      packages: write
-
-    steps:
-      - name: Grab the source from Git
-        uses: actions/checkout@v2
-
-      - name: Set Python version to 3.10
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-
-      - name: Install tox
-        run: python -m pip install tox --user
-
-      - name: Prepare ${{ env.TOXENV }} tox testenvs
-        run: python -m tox --skip-missing-interpreters false --notest
-
-      - name: Build image
-        run: >-
-          python -m tox
-          --skip-missing-interpreters false
-          --
-          --tag=${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
-
-      - name: Apply requested tags to the image
-        run: |
-          sh -x
-
-          for tag in \
-            '${{ github.sha }}' \
-            '${{ github.event.release.tag_name }}' \
-            latest
-          do
-            podman tag \
-              '${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
-              "ghcr.io/${{ github.repository }}:${tag}"
-          done
-
-          sh +x
-
-      - name: Push to GitHub Container Registry
-        id: push-to-ghcr
-        uses: redhat-actions/push-to-registry@v2.3.1
-        with:
-          image: ${{ github.repository }}
-          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }} latest
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Log the GHCR upload result
-        run: echo 'New image has been pushed to ${{ steps.push-to-ghcr.outputs.registry-paths }}'
-
-  quay:
-    name: Release ${{ github.event.release.tag_name }} to quay.io
-    needs:
-      - ghcr
-    runs-on: ubuntu-20.04
+  task:
+    name: ${{ matrix.command }}
+    runs-on: ubuntu-22.04
     environment:
       name: release
-      url: https://quay.io/repository/${{ github.repository }}?tab=tags&tag=${{ github.event.release.tag_name }}
 
-    env:
-      TOXENV: podman,check
-      UNIQUE_IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
-
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - release
     steps:
-      - name: Fetch the pre-published image from GHCR
-        run: podman pull ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}
-      - name: Apply requested tags to the image
-        run: |
-          sh -x
-
-          for tag in \
-            '${{ github.sha }}' \
-            '${{ github.event.release.tag_name }}' \
-            latest
-          do
-            podman tag \
-              'ghcr.io/${{ github.repository }}:${{ env.UNIQUE_IMAGE_TAG }}' \
-              "quay.io/${{ github.repository }}:${tag}"
-          done
-
-          sh +x
-
-      - name: Push to Quay Container Registry
-        id: push-to-quay
-        uses: redhat-actions/push-to-registry@v2.3.1
+      - name: Grab the source from Git
+        uses: actions/checkout@v3.1.0
         with:
-          image: ${{ github.repository }}
-          tags: ${{ env.UNIQUE_IMAGE_TAG }} ${{ github.sha }} ${{ github.event.release.tag_name }} latest
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-      - name: Log the Quay upload result
-        run: echo 'New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}'
+          fetch-depth: 0 # needed to determine version
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          # keep this in sync with python version from base container
+          python-version: "3.10" # 3.10 is default on ubuntu-22.04
+          cache: "pip"
+
+      - name: "Run: task ${{ matrix.command }}"
+        run: task ${{ matrix.command }}

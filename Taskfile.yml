@@ -1,0 +1,84 @@
+---
+# see https://taskfile.dev/#/
+version: "3"
+output: group
+env: &env
+  FORCE_COLOR: "true"
+  PRE_COMMIT_COLOR: always
+
+  TARGET_CONTAINER_TAG: x
+vars:
+  HOSTNAME:
+    sh: echo ${HOSTNAME:-localhost}
+  CNT_NAME: creator-ee
+  VERSION:
+    sh: git describe --tags
+  CNT_NAME_TAG: "{{.CNT_NAME}}:{{.VERSION}}"
+tasks:
+  default:
+    desc: Run most commands
+    deps:
+      - setup
+      - lint
+      - build
+    cmds:
+      - echo {{.TASK}}
+      - echo Done {{.VERSION}}!
+  clean:
+    desc: Clean up all files that not tracked by git
+    cmds:
+      - git clean -dxf
+  setup:
+    desc: Install dependencies
+    env:
+      # used inside test-setup.sh
+      OS: "{{OS}}"
+      ARCH: "{{ARCH}}"
+    cmds:
+      - bash ./_build/test-setup.sh
+    sources:
+      - _build/test-setup.sh
+      - Taskfile.yml
+    generates:
+      - out/log/manifest.yml
+    run: once
+  build:
+    desc: Build the project
+    deps:
+      - setup
+    cmds:
+      - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
+      - podman buildx build --jobs=4 ${EXTRA_OPTS:-} --load . --manifest {{.CNT_NAME_TAG}}
+      # running manifest exists is mandatory as this fails if no manifest is
+      # created locally. If this is skipped the inspect might pull the last
+      # published manifest instead of using the local one.
+      - podman manifest exists {{.CNT_NAME_TAG}}
+      # Fail if the manifest does not contain exactly two images
+      - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q '2'
+      - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
+    sources:
+      - Taskfile.yml
+      - _build/
+  lint:
+    desc: Lint the project
+    deps:
+      - setup
+    cmds:
+      - python3 -m pre_commit run -a
+      - _build/dirty.sh
+    silent: true
+  pr:
+    desc: Opens a pull request using gh
+    deps:
+      - lint
+    cmds:
+      - gh pr create
+    interactive: true
+  release:
+    desc: Publish containers to all public registries (used by CI)
+    deps:
+      - build
+    cmds:
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
+      - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}
+    interactive: true
