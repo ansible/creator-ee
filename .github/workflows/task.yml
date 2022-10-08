@@ -1,66 +1,57 @@
 ---
-name: tox
+name: task # named after our build tool (taskfile) cli command
 
 on:
   pull_request:
-    branches:
-      - main
-
+    branches: [main, devel]
   push:
-    branches:
-      - main
+    branches: [main, devel]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
 jobs:
-  tox:
-    name: ${{ matrix.toxenv }}
-
+  task:
+    name: ${{ matrix.command }}
     runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
       matrix:
-        toxenv:
+        command:
           - lint
-          - podman
-          - docker
+          - build
 
     env:
-      TOXENV: ${{ matrix.toxenv }}
       EXTRA_OPTS: --platform linux/amd64,linux/arm64
 
     steps:
       - name: Grab the source from Git
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 0 # needed to determine version
 
-      - uses: actions/setup-python@v2
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v4
         with:
           # keep this in sync with python version from base container
           python-version: "3.10" # 3.10 is default on ubuntu-22.04
+          cache: "pip"
 
-      - name: Install deps
-        run: |
-          sudo apt-get update
-          sudo apt-get -qq install -y --no-install-recommends --no-install-suggests -o=Dpkg::Use-Pty=0 qemu-user-static
-          python -m pip install tox
-
-      - name: Prepare ${{ env.TOXENV }} tox testenv
-        run: tox --skip-missing-interpreters false --notest
-
-      - name: Run ${{ env.TOXENV }} tox testenv
-        run: tox --skip-missing-interpreters false
+      - name: "Run: task ${{ matrix.command }}"
+        run: task ${{ matrix.command }}
 
   check: # This job does nothing and is only used for the branch protection
     if: always()
-
     needs:
-      - tox
-
+      - task
     runs-on: ubuntu-latest
-
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@release/v1
