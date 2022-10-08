@@ -21,4 +21,5 @@ RUN set -ex \
 && molecule drivers \
 && podman --version \
 && python3 --version \
-&& git --version
+&& git --version \
+&& uname -a
