@@ -23,6 +23,7 @@ jobs:
 
     env:
       EXTRA_OPTS: --platform linux/amd64,linux/arm64
+      EXPECTED_IMAGES: 2
 
     steps:
       - name: Grab the source from Git

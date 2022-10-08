@@ -55,7 +55,7 @@ tasks:
       # published manifest instead of using the local one.
       - podman manifest exists {{.CNT_NAME_TAG}}
       # Fail if the manifest does not contain exactly two images
-      - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q '2'
+      - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
