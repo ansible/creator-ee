@@ -4,7 +4,6 @@ on:
     types:
       - published
   workflow_dispatch:
-permissions: {}
 
 jobs:
   task:
@@ -12,6 +11,9 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: release
+    permissions:
+      contents: read
+      packages: write
 
     strategy:
       fail-fast: false
