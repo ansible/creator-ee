@@ -40,5 +40,26 @@ jobs:
           python-version: "3.10" # 3.10 is default on ubuntu-22.04
           cache: "pip"
 
+      - name: Log in to ghcr.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          registry: ghcr.io/${{ github.repository_owner }}
+
+      - name: Log in to quay.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          registry: quay.io
+
+      # - name: Log in to docker.io
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_TOKEN }}
+      #     registry: docker.io
+
       - name: "Run: task ${{ matrix.command }}"
         run: task ${{ matrix.command }}
