@@ -18,6 +18,10 @@ jobs:
       matrix:
         command:
           - release
+
+    env:
+      EXTRA_OPTS: --platform linux/amd64,linux/arm64
+
     steps:
       - name: Grab the source from Git
         uses: actions/checkout@v3.1.0
