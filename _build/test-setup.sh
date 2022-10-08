@@ -128,7 +128,7 @@ python3 -c "import os, stat, sys; sys.exit(os.stat('.').st_mode & stat.S_IWOTH)"
     exit 100
 }
 
-python3 -m pre_commit --version >/dev/null || {
+python3 -m pre_commit --version >/dev/null 2>&1 || {
     python3 -m pip install -q pre-commit
 }
 

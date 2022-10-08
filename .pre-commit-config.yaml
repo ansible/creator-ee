@@ -7,6 +7,8 @@ ci:
     chore: auto fixes from pre-commit.com hooks
 
     for more information, see https://pre-commit.ci
+  skip:
+    - pip-compile
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v4.3.0
@@ -35,3 +37,17 @@ repos:
         files: \.(yaml|yml)$
         types: [file, yaml]
         entry: yamllint --strict
+  - # keep at bottom as these are slower
+    repo: local
+    hooks:
+      - id: pip-compile
+        name: pip-compile
+        entry: pip-compile --upgrade --no-annotate --output-file=_build/requirements.txt -r _build/requirements.in --strip-extras --no-header
+        language: python
+        additional_dependencies:
+          - pip-tools>=6.9.0
+        files: ^_build/requirements\.(in|txt)$
+        pass_filenames: false
+        language_version: "3.10"
+        stages: [manual]
+        verbose: true

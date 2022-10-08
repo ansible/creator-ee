@@ -1,6 +1,7 @@
 # Used to help dependabot bump the lock file
-ansible-lint>=6.5.2
-molecule>=3.6.1
-molecule-podman>=2.0.0
+ansible-lint>=6.8.0
+ansible-core>=2.13.0
+molecule>=4.0.1
+molecule-podman>=2.0.3
 yamllint>=1.26.3
 paramiko>=2.11.0  # https://github.com/ansible/creator-ee/issues/140
