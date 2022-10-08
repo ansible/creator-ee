@@ -1,23 +1,27 @@
-name: release
+---
+name: task # named after our build tool (taskfile) cli command
+
 on:
-  release:
-    types:
-      - published
-  workflow_dispatch:
-permissions: {}
+  pull_request:
+    branches: [main, devel]
+  push:
+    branches: [main, devel]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   task:
     name: ${{ matrix.command }}
     runs-on: ubuntu-22.04
-    environment:
-      name: release
 
     strategy:
       fail-fast: false
       matrix:
         command:
-          - release
+          - lint
+          - build
 
     env:
       EXTRA_OPTS: --platform linux/amd64,linux/arm64
@@ -42,3 +46,14 @@ jobs:
 
       - name: "Run: task ${{ matrix.command }}"
         run: task ${{ matrix.command }}
+
+  check: # This job does nothing and is only used for the branch protection
+    if: always()
+    needs:
+      - task
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
