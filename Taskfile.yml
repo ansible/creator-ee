@@ -14,6 +14,7 @@ vars:
   VERSION:
     sh: git describe --tags
   CNT_NAME_TAG: "{{.CNT_NAME}}:{{.VERSION}}"
+  CNT_NAME_TAG_LATEST: "{{.CNT_NAME}}:latest"
 tasks:
   default:
     desc: Run most commands
@@ -54,7 +55,7 @@ tasks:
       # published manifest instead of using the local one.
       - podman manifest exists {{.CNT_NAME_TAG}}
       # Fail if the manifest does not contain exactly two images
-      - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q '2'
+      - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
@@ -79,6 +80,8 @@ tasks:
     deps:
       - build
     cmds:
-      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
-      - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}
+      # fail if we are not on a tagged commit
+      - git describe --tags --exact-match
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
+      - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG_LATEST}}
     interactive: true
