@@ -5,8 +5,6 @@ output: group
 env: &env
   FORCE_COLOR: "true"
   PRE_COMMIT_COLOR: always
-
-  TARGET_CONTAINER_TAG: x
 vars:
   HOSTNAME:
     sh: echo ${HOSTNAME:-localhost}
@@ -15,6 +13,9 @@ vars:
     sh: git describe --tags
   CNT_NAME_TAG: "{{.CNT_NAME}}:{{.VERSION}}"
   CNT_NAME_TAG_LATEST: "{{.CNT_NAME}}:latest"
+  CNT_ROOT: .
+  # Fail if we are not on a tagged commit
+  RELEASE_PRECHECK: git describe --tags --exact-match
 tasks:
   default:
     desc: Run most commands
@@ -25,6 +26,21 @@ tasks:
     cmds:
       - echo {{.TASK}}
       - echo Done {{.VERSION}}!
+  base:
+    desc: Build base image
+    vars: &base-vars
+      VERSION: "latest"
+      CNT_NAME: creator-base
+      CNT_NAME_TAG: "{{.CNT_NAME}}:{{.VERSION}}"
+      CNT_NAME_TAG_LATEST: "{{.CNT_NAME}}:latest"
+      CNT_ROOT: base/
+      RELEASE_PRECHECK: "true"
+    cmds:
+      - task: build
+        vars: *base-vars
+      - task: release
+        vars: *base-vars
+    interactive: true
   clean:
     desc: Clean up all files that not tracked by git
     cmds:
@@ -43,13 +59,14 @@ tasks:
     generates:
       - out/log/manifest.yml
     run: once
+    interactive: true
   build:
     desc: Build the project
     deps:
       - setup
     cmds:
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
-      - podman buildx build --jobs=4 ${EXTRA_OPTS:-} --load . --manifest {{.CNT_NAME_TAG}}
+      - podman buildx build ${EXTRA_OPTS:-} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
       # published manifest instead of using the local one.
@@ -60,6 +77,7 @@ tasks:
     sources:
       - Taskfile.yml
       - _build/
+    interactive: true
   lint:
     desc: Lint the project
     deps:
@@ -80,8 +98,7 @@ tasks:
     deps:
       - build
     cmds:
-      # fail if we are not on a tagged commit
-      - git describe --tags --exact-match
+      - "{{.RELEASE_PRECHECK}}"
       - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
       - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
       - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}

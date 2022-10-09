@@ -1,10 +1,9 @@
-name: release
+name: update-base
 on:
-  release:
-    types:
-      - published
   workflow_dispatch:
-
+  schedule:
+    # Sunday at 2am UTC
+    - cron: "0 2 * * 0"
 jobs:
   task:
     name: ${{ matrix.command }}
@@ -19,10 +18,10 @@ jobs:
       fail-fast: false
       matrix:
         command:
-          - release
+          - base
 
     env:
-      EXTRA_OPTS: --jobs=4 --platform linux/amd64,linux/arm64
+      EXTRA_OPTS: --platform linux/amd64,linux/arm64
       EXPECTED_IMAGES: 2
 
     steps:
