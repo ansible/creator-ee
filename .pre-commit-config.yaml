@@ -42,7 +42,7 @@ repos:
     hooks:
       - id: pip-compile
         name: pip-compile
-        entry: pip-compile --upgrade --no-annotate --output-file=_build/requirements.txt -r _build/requirements.in --strip-extras --no-header
+        entry: pip-compile --upgrade --pre --no-annotate --output-file=_build/requirements.txt -r _build/requirements.in --strip-extras --no-header
         language: python
         additional_dependencies:
           - pip-tools>=6.9.0
