@@ -46,6 +46,17 @@ jobs:
           python-version: "3.10" # 3.10 is default on ubuntu-22.04
           cache: "pip"
 
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            base:
+              - 'base/**'
+
+      - name: "Run: task base"
+        if: steps.changes.outputs.base == 'true'
+        run: task base
+
       - name: "Run: task ${{ matrix.command }}"
         run: task ${{ matrix.command }}
 

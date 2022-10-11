@@ -38,8 +38,6 @@ tasks:
     cmds:
       - task: build
         vars: *base-vars
-      - task: release
-        vars: *base-vars
     interactive: true
   clean:
     desc: Clean up all files that not tracked by git
@@ -73,10 +71,24 @@ tasks:
       - podman manifest exists {{.CNT_NAME_TAG}}
       # Fail if the manifest does not contain exactly two images
       - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"
+      - touch .task/.{{.CNT_NAME}}.done
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
-      - _build/
+      - base/*.*
+      - _build/*.*
+      - Containerfile
+    generates:
+      - .task/.{{.CNT_NAME}}.done
+    interactive: true
+  exec:
+    desc: Open a container shell
+    deps:
+      - build
+    cmds:
+      - podman run --rm -it {{.CNT_NAME_TAG}} /bin/bash
+    sources:
+      - Taskfile.yml
     interactive: true
   lint:
     desc: Lint the project
@@ -103,6 +115,14 @@ tasks:
       - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
       - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}
       - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG_LATEST}}
+    interactive: true
+  release-base:
+    desc: Publish creator-base container (used by CI)
+    deps:
+      - base
+    cmds:
+      - task: release
+        vars: *base-vars
     interactive: true
   deps:
     desc: Upgrade dependencies
