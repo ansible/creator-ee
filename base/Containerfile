@@ -9,6 +9,7 @@ RUN \
 dnf update -y && \
 dnf -y upgrade && \
 dnf install -y \
+dumb-init \
 git \
 podman \
 python3-cffi \

@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         command:
-          - base
+          - release-base
 
     env:
       EXTRA_OPTS: --jobs=4 --platform linux/amd64,linux/arm64
