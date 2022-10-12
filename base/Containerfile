@@ -3,6 +3,13 @@
 # when using QEMU emulation.
 ARG EE_BASE_IMAGE=quay.io/fedora/fedora:latest
 FROM $EE_BASE_IMAGE
+
+# https://github.com/opencontainers/image-spec/blob/main/annotations.md
+LABEL org.opencontainers.image.source https://github.com/ansible/creator-ee
+LABEL org.opencontainers.image.authors "Ansible DevTools"
+LABEL org.opencontainers.image.vendor "Red Hat"
+LABEL org.opencontainers.image.licenses "GPL-3.0"
+
 USER root
 
 RUN \

@@ -64,6 +64,7 @@ tasks:
       - setup
     cmds:
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
+      - podman image exists {{.CNT_NAME_TAG}} && podman image rm {{.CNT_NAME_TAG}} || true
       - podman buildx build ${EXTRA_OPTS:-} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
@@ -107,22 +108,26 @@ tasks:
     interactive: true
   release:
     desc: Publish containers to all public registries (used by CI)
-    deps:
-      - build
     cmds:
+      - task: build
+        vars: *env
       - "{{.RELEASE_PRECHECK}}"
-      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
-      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
       - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}
       - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG_LATEST}}
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
     interactive: true
   release-base:
     desc: Publish creator-base container (used by CI)
-    deps:
-      - base
+    vars: *base-vars
     cmds:
-      - task: release
+      - task: base
         vars: *base-vars
+      - "{{.RELEASE_PRECHECK}}"
+      - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG}}
+      - podman manifest push {{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME_TAG_LATEST}}
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
+      - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
     interactive: true
   deps:
     desc: Upgrade dependencies
