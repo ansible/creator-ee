@@ -9,6 +9,8 @@ LABEL org.opencontainers.image.authors "Ansible DevTools"
 LABEL org.opencontainers.image.vendor "Red Hat"
 LABEL org.opencontainers.image.licenses "GPL-3.0"
 
+LABEL ansible-execution-environment=true
+
 USER root
 
 COPY _build/requirements.in /root/requirements.in
