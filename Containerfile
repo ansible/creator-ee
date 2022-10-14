@@ -26,6 +26,10 @@ RUN set -ex \
 && git --version \
 && uname -a
 
+# mimic builder / used by navigator
+# https://github.com/ansible/ansible-navigator/pull/1317
+LABEL ansible-execution-environment=true
+
 ADD _build/entrypoint.sh /bin/entrypoint
 RUN chmod +x /bin/entrypoint
 ENTRYPOINT ["entrypoint"]
