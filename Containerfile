@@ -28,4 +28,9 @@ RUN set -ex \
 
 ADD _build/entrypoint.sh /bin/entrypoint
 RUN chmod +x /bin/entrypoint
+
+# Carried forward from the runner EE build and used by navigator to determine if a container is an EE
+# https://github.com/ansible/ansible-builder/issues/424
+WORKDIR /runner
+
 ENTRYPOINT ["entrypoint"]
