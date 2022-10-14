@@ -12,11 +12,16 @@ LABEL org.opencontainers.image.licenses "GPL-3.0"
 LABEL ansible-execution-environment=true
 
 USER root
+WORKDIR /tmp
 
-COPY _build/requirements.in /root/requirements.in
-COPY _build/requirements.txt /root/requirements.txt
+COPY _build/requirements.in requirements.in
+COPY _build/requirements.txt requirements.txt
+COPY _build/requirements.yml requirements.yml
 RUN \
-pip3 install -r /root/requirements.in -c /root/requirements.txt && \
+pip3 install -r requirements.in -c requirements.txt && \
+mkdir -p ~/.ansible/roles && \
+mkdir -p ~/.ansible/collections/ansible_collections && \
+ansible-galaxy collection install -r requirements.yml && \
 rm -rf $(pip3 cache dir)
 # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
 RUN set -ex \
@@ -26,6 +31,8 @@ RUN set -ex \
 && podman --version \
 && python3 --version \
 && git --version \
+&& ansible-galaxy role list \
+&& ansible-galaxy collection list \
 && uname -a
 
 ADD _build/entrypoint.sh /bin/entrypoint
