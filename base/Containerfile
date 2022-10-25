@@ -5,7 +5,7 @@ ARG EE_BASE_IMAGE=quay.io/fedora/fedora:latest
 FROM $EE_BASE_IMAGE
 
 # https://github.com/opencontainers/image-spec/blob/main/annotations.md
-LABEL org.opencontainers.image.source https://github.com/ansible/creator-ee
+LABEL org.opencontainers.image.source https://github.com/ansible/creator-ee/blob/main/base/Containerfile
 LABEL org.opencontainers.image.authors "Ansible DevTools"
 LABEL org.opencontainers.image.vendor "Red Hat"
 LABEL org.opencontainers.image.licenses "GPL-3.0"
@@ -19,9 +19,11 @@ dnf install -y \
 dumb-init \
 git \
 podman \
+python3-bcrypt \
 python3-cffi \
 python3-cryptography \
 python3-pip \
+python3-pynacl \
 python3-pyrsistent \
 python3-pyyaml \
 python3-ruamel-yaml \
