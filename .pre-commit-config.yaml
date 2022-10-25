@@ -42,7 +42,19 @@ repos:
     hooks:
       - id: pip-compile
         name: pip-compile
-        entry: pip-compile --upgrade --pre --no-annotate --output-file=_build/requirements.txt -r _build/requirements.in --strip-extras --no-header
+        entry: >
+          pip-compile
+          --upgrade
+          --pre
+          --no-annotate
+          --output-file=_build/requirements.txt
+          -r _build/requirements.in
+          --strip-extras
+          --no-header
+          --unsafe-package cryptography
+          --unsafe-package setuptools
+          --unsafe-package ruamel-yaml-clib
+        # ^ all not-pure python packages should be added as unsafe
         language: python
         additional_dependencies:
           - pip-tools>=6.9.0
