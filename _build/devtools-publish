@@ -1,0 +1,15 @@
+#!/bin/bash
+# Entry point used by ansible-public-action for building and publishing a
+# collection in a single step.
+#
+set -euo pipefail
+
+pushd "${SRC_PATH:-.}"
+echo "Remove previous tarfile(s)."
+rm -f ./*.tar.gz
+
+ansible-galaxy collection build -v --force "${SRC_PATH:-.}"
+TARBALL=$(ls -1 ./*.tar.gz)
+ansible-galaxy collection publish -v --server "${API_SERVER:-https://galaxy.ansible.com/}" --api-key "${API_KEY}" "${TARBALL}"
+
+popd
