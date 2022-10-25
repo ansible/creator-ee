@@ -1,7 +1,7 @@
 # Ansible Creator Execution Environment
 
 This is a container (execution environment) aimed towards being used
-for development and testing of the Ansible content. We should also mention
+for the development and testing of the Ansible content. We should also mention
 that this container must not be used in production by Ansible users.
 
 It includes:
@@ -19,16 +19,9 @@ Among its main consumers, we can mention [ansible-navigator] and
 [molecule]: https://github.com/ansible-community/molecule
 [vscode-ansible]: https://github.com/ansible/vscode-ansible
 
-## Regenerating the build context with podman:
+## Contributing
 
-```console
-$ tox -e podman
-...
-```
-
-## Regenerating the build context with docker:
-
-```console
-$ tox -e docker
-...
-```
+We use [taskfile](https://taskfile.dev/) as build tool, so you should run
+`task -l` to list available. If you run just `task`, it will run the default
+set of build tasks. If these are passing, you are ready to open a pull request
+with your changes.
