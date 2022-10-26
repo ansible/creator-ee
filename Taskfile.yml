@@ -72,12 +72,14 @@ tasks:
       - podman manifest exists {{.CNT_NAME_TAG}}
       # Fail if the manifest does not contain exactly two images
       - podman manifest inspect {{.CNT_NAME_TAG}} | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"
+      # Validate image
+      - ./_build/validate {{.CNT_NAME_TAG}}
       - touch .task/.{{.CNT_NAME}}.done
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
-      - base/*.*
-      - _build/*.*
+      - base/
+      - _build/
       - Containerfile
     generates:
       - .task/.{{.CNT_NAME}}.done
