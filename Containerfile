@@ -18,6 +18,7 @@ COPY _build/requirements.in requirements.in
 COPY _build/requirements.txt requirements.txt
 COPY _build/requirements.yml requirements.yml
 COPY _build/devtools-publish /usr/local/bin/devtools-publish
+COPY _build/shells /etc/shells
 RUN \
 pip3 install -r requirements.in -c requirements.txt && \
 mkdir -p ~/.ansible/roles && \
