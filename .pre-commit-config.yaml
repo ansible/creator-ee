@@ -9,6 +9,7 @@ ci:
     for more information, see https://pre-commit.ci
   skip:
     - pip-compile
+    - shellcheck
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v4.3.0
@@ -37,6 +38,12 @@ repos:
         files: \.(yaml|yml)$
         types: [file, yaml]
         entry: yamllint --strict
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.8.0
+    hooks:
+      - id: shellcheck
+        args:
+          - --color=always
   - # keep at bottom as these are slower
     repo: local
     hooks:
