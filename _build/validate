@@ -1,0 +1,6 @@
+#!/bin/bash
+set -exuo pipefail
+
+CNT=${1:-quay.io/ansible/creator-ee:latest}
+
+podman run -ti --user="$(id -u)" $CNT uname -a
