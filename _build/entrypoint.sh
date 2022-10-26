@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# cSpell:ignore getent NEWPW MYHOME
 
 # We need to fix a number of problems here that manifest under different container runtimes, as well as tweak some
 # things to simplify runner's containerized launch behavior. Since runner currently always expects to bind-mount its
@@ -27,7 +28,7 @@
 # rely on the inner runner's copy. This would allow us to restore the typical POSIX user homedir conventions.
 
 # if any of this business fails, we probably want to fail fast
-if [ -n "$EP_DEBUG" ]; then
+if [ -n "${EP_DEBUG:-}" ]; then
   set -eux
   echo 'hello from entrypoint'
 else
@@ -35,11 +36,15 @@ else
 fi
 
 # current user might not exist in /etc/passwd at all
-if ! "$(whoami &> /dev/null)" || ! getent passwd "$(whoami || id -u)" &> /dev/null ; then
-  if [ -n "$EP_DEBUG" ]; then
-    echo "adding missing uid $(id -u) into /etc/passwd"
+# podman implicit when passing custom uid on macos :>
+# 501:*:501:0:container user:/home/runner:/bin/sh
+# shellcheck disable=SC2046
+if ! whoami &> /dev/null || ! /usr/bin/getent passwd $(whoami || id -u) &> /dev/null ; then
+  UID=$(id -u)
+  if [ -n "${EP_DEBUG:-}" ]; then
+    echo "adding missing uid $UID into /etc/passwd"
   fi
-  echo "$(id -u):x:$(id -u):0:container user $(id -u):/home/runner:/bin/bash" >> /etc/passwd
+  echo "$UID:x:$UID:0:container user:/home/runner:/bin/bash" >> /etc/passwd
   export HOME=/home/runner
 fi
 
@@ -57,7 +62,7 @@ if [ "$MYHOME" != "$HOME" ] || [ "$MYHOME" != "/home/runner" ]; then
   export HOME=/home/runner
 fi
 
-if [[ -n "${LAUNCHED_BY_RUNNER}" ]]; then
+if [[ -n "${LAUNCHED_BY_RUNNER:-}" ]]; then
     # Special actions to be compatible with old ansible-runner versions, 2.1.x specifically
     RUNNER_CALLBACKS=$(python3 -c "from ansible_runner.display_callback.callback import awx_display; print(awx_display.__file__)")
     ANSIBLE_CALLBACK_PLUGINS="$(dirname "$RUNNER_CALLBACKS")"
@@ -67,7 +72,7 @@ if [[ -n "${LAUNCHED_BY_RUNNER}" ]]; then
     export ANSIBLE_STDOUT_CALLBACK=awx_display
 fi
 
-if [[ -d ${AWX_ISOLATED_DATA_DIR} ]]; then
+if [[ -n "${AWX_ISOLATED_DATA_DIR:-}" && -d ${AWX_ISOLATED_DATA_DIR} ]]; then
     if output=$(ansible-galaxy collection list --format json 2> /dev/null); then
         echo "$output" > "${AWX_ISOLATED_DATA_DIR}/collections.json"
     fi
