@@ -1,5 +1,6 @@
 ---
 # see https://taskfile.dev/#/
+# cspell: ignore buildx
 version: "3"
 output: group
 env: &env
@@ -79,7 +80,7 @@ tasks:
     sources:
       - Taskfile.yml
       - base/
-      - _build/
+      - _build/*
       - Containerfile
     generates:
       - .task/.{{.CNT_NAME}}.done
