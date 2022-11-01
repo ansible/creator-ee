@@ -40,11 +40,11 @@ fi
 # 501:*:501:0:container user:/home/runner:/bin/sh
 # shellcheck disable=SC2046
 if ! whoami &> /dev/null || ! /usr/bin/getent passwd $(whoami || id -u) &> /dev/null ; then
-  UID=$(id -u)
+  MY_UID=$(id -u)
   if [ -n "${EP_DEBUG:-}" ]; then
-    echo "adding missing uid $UID into /etc/passwd"
+    echo "adding missing uid $MY_UID into /etc/passwd"
   fi
-  echo "$UID:x:$UID:0:container user:/home/runner:/bin/bash" >> /etc/passwd
+  echo "$MY_UID:x:$MY_UID:0:container user:/home/runner:/bin/bash" >> /etc/passwd
   export HOME=/home/runner
 fi
 
