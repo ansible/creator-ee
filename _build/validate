@@ -4,7 +4,9 @@ set -exuo pipefail
 
 CNT=${1:-quay.io/ansible/creator-ee:latest}
 
-podman run -ti --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
-podman run -ti --user="$(id -u)" "$CNT" uname -a
-podman run -ti --user="$(id -u)" "$CNT" bash -c 'set | grep PATH'
-podman run -ti --user="$(id -u)" "$CNT" command -v ansible-lint
+# Do not use `-t` (interactive) with podman, especially inside scripts/automation as it is
+# likely to cause problems.
+podman run -i --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
+podman run -i --user="$(id -u)" "$CNT" uname -a
+podman run -i --user="$(id -u)" "$CNT" bash -c 'set | grep PATH'
+podman run -i --user="$(id -u)" "$CNT" command -v ansible-lint
