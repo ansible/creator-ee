@@ -18,11 +18,10 @@ COPY _build/requirements.in requirements.in
 COPY _build/requirements.txt requirements.txt
 COPY _build/requirements.yml requirements.yml
 COPY _build/devtools-publish /usr/local/bin/devtools-publish
+COPY _build/shells /etc/shells
 RUN \
 pip3 install -r requirements.in -c requirements.txt && \
 mkdir -p ~/.ansible/roles && \
-mkdir -p ~/.ansible/collections/ansible_collections && \
-ansible-galaxy collection install -r requirements.yml && \
 rm -rf $(pip3 cache dir)
 
 # In OpenShift, container will run as a random uid number and gid 0. Make sure things
@@ -43,9 +42,11 @@ RUN for dir in \
       /etc/passwd \
       /etc/group ; \
     do touch $file ; chmod g+rw $file ; chgrp root $file ; done
+COPY collections/ /usr/share/ansible/collections
 
 # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
 RUN set -ex \
+&& ansible --version \
 && ansible-lint --version \
 && molecule --version \
 && molecule drivers \

@@ -51,7 +51,7 @@ if [[ -f "/usr/bin/apt-get" ]]; then
     INSTALL=0
     # qemu-user-static is required by podman on arm64
     # python3-dev is needed for headers as some packages might need to compile
-    DEBS=(curl git python3-pip qemu-user-static jq gh)
+    DEBS=(curl git python3-pip python3-venv qemu-user-static jq gh)
     for DEB in "${DEBS[@]}"; do
         [[ "$(dpkg-query --show --showformat='${db:Status-Status}\n' \
             "${DEB}" || true)" != 'installed' ]] && INSTALL=1
@@ -129,7 +129,7 @@ python3 -c "import os, stat, sys; sys.exit(os.stat('.').st_mode & stat.S_IWOTH)"
 }
 
 python3 -m pre_commit --version >/dev/null 2>&1 || {
-    python3 -m pip install -q pre-commit
+    python3 -m pip install -q pre-commit ansible-core
 }
 
 # Detect podman and ensure that it is usable (unless SKIP_PODMAN)

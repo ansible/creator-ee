@@ -46,6 +46,14 @@ jobs:
           python-version: "3.10" # 3.10 is default on ubuntu-22.04
           cache: "pip"
 
+      - name: Set cache for galaxy
+        uses: actions/cache@v3
+        if: "contains(matrix.command, 'build')"
+        with:
+          path: |
+            collections
+          key: galaxy-${{ hashFiles('_build/requirements.yml') }}
+
       - uses: dorny/paths-filter@v2
         id: changes
         with:

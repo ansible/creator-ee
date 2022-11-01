@@ -1,5 +1,6 @@
 ---
 # see https://taskfile.dev/#/
+# cspell: ignore buildx
 version: "3"
 output: group
 env: &env
@@ -63,6 +64,7 @@ tasks:
     deps:
       - setup
     cmds:
+      - ansible-galaxy collection install -r _build/requirements.yml -p collections
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
       - podman image exists {{.CNT_NAME_TAG}} && podman image rm {{.CNT_NAME_TAG}} || true
       - podman buildx build ${EXTRA_OPTS:-} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
@@ -79,7 +81,7 @@ tasks:
     sources:
       - Taskfile.yml
       - base/
-      - _build/
+      - _build/*
       - Containerfile
     generates:
       - .task/.{{.CNT_NAME}}.done
