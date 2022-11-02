@@ -14,6 +14,10 @@ LABEL ansible-execution-environment=true
 USER root
 WORKDIR /tmp
 
+RUN \
+dnf install -y which --nodocs --setopt install_weak_deps=False && \
+dnf clean all -y
+
 COPY _build/requirements.in requirements.in
 COPY _build/requirements.txt requirements.txt
 COPY _build/requirements.yml requirements.yml
