@@ -4,6 +4,12 @@ set -exuo pipefail
 
 CNT=${1:-quay.io/ansible/creator-ee:latest}
 
+
+# creator-base container is expected to have python3
+if [[ "$CNT" == *"creator-base"* ]]; then
+  podman run -i "$CNT" python3 --version
+  exit 0
+fi
 # Do not use `-t` (interactive) with podman, especially inside scripts/automation as it is
 # likely to cause problems.
 podman run -i --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
