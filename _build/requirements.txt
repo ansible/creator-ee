@@ -36,7 +36,7 @@ pycparser==2.21
 pygments==2.13.0
 pynacl==1.5.0
 pyparsing==3.0.9
-pyrsistent==0.18.1
+pyrsistent==0.19.2
 python-dateutil==2.8.2
 python-slugify==6.1.2
 pyyaml==6.0
