@@ -19,13 +19,4 @@ microdnf install -y \
 dumb-init \
 git \
 podman \
-python3-bcrypt \
-python3-cffi \
-python3-cryptography \
-python3-pip \
-python3-pynacl \
-python3-pyrsistent \
-python3-pyyaml \
-python3-ruamel-yaml \
-python3-wheel \
 && microdnf clean all
