@@ -19,6 +19,7 @@ microdnf install -y \
 dumb-init \
 git \
 podman \
+python3 \
 python3-bcrypt \
 python3-cffi \
 python3-cryptography \
