@@ -63,6 +63,9 @@ tasks:
     desc: Build the project
     deps:
       - setup
+    env:
+      # needed to avoid warning about installing from galaxy
+      ANSIBLE_COLLECTIONS_PATHS: collections
     cmds:
       - ansible-galaxy collection install -r _build/requirements.yml -p collections
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
