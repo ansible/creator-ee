@@ -20,7 +20,8 @@ COPY _build/requirements.yml requirements.yml
 COPY _build/devtools-publish /usr/local/bin/devtools-publish
 COPY _build/shells /etc/shells
 RUN \
-pip3 install -r requirements.in -c requirements.txt && \
+pip3 install --compile --only-binary :all: \
+-r requirements.in -c requirements.txt && \
 mkdir -p ~/.ansible/roles && \
 rm -rf $(pip3 cache dir)
 
