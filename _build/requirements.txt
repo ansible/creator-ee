@@ -21,7 +21,6 @@ idna==3.4
 jinja2==3.1.2
 jinja2-time==0.2.0
 jsonschema==4.17.0
-markupsafe==2.1.1
 molecule==4.0.3
 molecule-podman==2.0.3
 mypy-extensions==0.4.3
@@ -51,4 +50,5 @@ yamllint==1.28.0
 
 # The following packages are considered to be unsafe in a requirements file:
 # cryptography
+# markupsafe
 # setuptools

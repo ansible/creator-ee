@@ -59,6 +59,7 @@ repos:
           --strip-extras
           --no-header
           --unsafe-package cryptography
+          --unsafe-package MarkupSafe
           --unsafe-package setuptools
           --unsafe-package ruamel-yaml-clib
         # ^ all not-pure python packages should be added as unsafe
