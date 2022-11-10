@@ -29,4 +29,6 @@ python3-pyrsistent \
 python3-pyyaml \
 python3-ruamel-yaml \
 python3-wheel \
-&& microdnf clean all
+&& microdnf clean all \
+# See https://lwn.net/Articles/881107/
+&& rm -rf /usr/lib/sysimage/rpm
