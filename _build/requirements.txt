@@ -30,7 +30,7 @@ mypy-extensions==0.4.3
 packaging==21.3
 paramiko==2.12.0
 pathspec==0.10.1
-platformdirs==2.5.3
+platformdirs==2.5.4
 pluggy==1.0.0
 pycparser==2.21
 pygments==2.13.0
