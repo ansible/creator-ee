@@ -44,7 +44,7 @@ requests==2.28.1
 resolvelib==0.8.1
 rich==12.6.0
 ruamel-yaml==0.17.21
-selinux==0.2.1
+selinux==0.3.0
 six==1.16.0
 subprocess-tee==0.4.1
 text-unidecode==1.3
