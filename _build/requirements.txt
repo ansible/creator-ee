@@ -1,5 +1,5 @@
 ansible-compat==2.2.7
-ansible-core==2.14.0
+ansible-core==2.14.1
 ansible-lint==6.10.0
 arrow==1.2.3
 attrs==22.2.0
