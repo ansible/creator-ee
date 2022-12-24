@@ -30,7 +30,8 @@ tasks:
   base:
     desc: Build base image
     sources:
-      - base/
+      - base/*
+      - .task/.{{.CNT_NAME}}.done
     vars: &base-vars
       VERSION: "latest"
       CNT_NAME: creator-base
@@ -85,7 +86,7 @@ tasks:
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
-      - base/
+      - base/*
       - _build/*
       - Containerfile
     generates:
