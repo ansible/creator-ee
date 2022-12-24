@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Grab the source from Git
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.2.0
         with:
           fetch-depth: 0 # needed to determine version
 
