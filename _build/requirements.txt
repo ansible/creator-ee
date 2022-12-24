@@ -7,7 +7,7 @@ bcrypt==4.0.1
 binaryornot==0.4.4
 black==22.10.0
 bracex==2.3.post1
-certifi==2022.9.24
+certifi==2022.12.7
 cffi==1.15.1
 chardet==5.1.0
 charset-normalizer==2.1.1
