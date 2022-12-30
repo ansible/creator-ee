@@ -42,7 +42,7 @@ python-slugify==7.0.0
 pyyaml==6.0
 requests==2.28.1
 resolvelib==0.8.1
-rich==12.6.0
+rich==13.0.0
 ruamel-yaml==0.17.21
 selinux==0.3.0
 six==1.16.0
