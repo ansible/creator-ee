@@ -14,14 +14,13 @@ LABEL ansible-execution-environment=true
 USER root
 WORKDIR /tmp
 
-COPY _build/requirements.in requirements.in
 COPY _build/requirements.txt requirements.txt
 COPY _build/requirements.yml requirements.yml
 COPY _build/devtools-publish /usr/local/bin/devtools-publish
 COPY _build/shells /etc/shells
 RUN \
 pip3 install --compile --only-binary :all: \
--r requirements.in -c requirements.txt && \
+-r requirements.txt && \
 mkdir -p ~/.ansible/roles && \
 rm -rf $(pip3 cache dir)
 
