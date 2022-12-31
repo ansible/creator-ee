@@ -139,9 +139,3 @@ tasks:
       - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG}}
       - podman manifest push {{.CNT_NAME_TAG}} ghcr.io/ansible/{{.CNT_NAME_TAG_LATEST}}
     interactive: true
-  deps:
-    desc: Upgrade dependencies
-    cmds:
-      - pre-commit run -a --hook-stage manual pip-compile
-    silent: false
-    interactive: true

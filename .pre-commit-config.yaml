@@ -8,8 +8,6 @@ ci:
     chore: auto fixes from pre-commit.com hooks
 
     for more information, see https://pre-commit.ci
-  skip:
-    - pip-compile
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v4.4.0
@@ -44,30 +42,3 @@ repos:
       - id: shellcheck
         args:
           - --color=always
-  - # keep at bottom as these are slower
-    repo: local
-    hooks:
-      - id: pip-compile
-        name: pip-compile
-        entry: >
-          pip-compile
-          --upgrade
-          --pre
-          --no-annotate
-          --output-file=_build/requirements.txt
-          -r _build/requirements.in
-          --strip-extras
-          --no-header
-          --unsafe-package cryptography
-          --unsafe-package MarkupSafe
-          --unsafe-package setuptools
-          --unsafe-package ruamel-yaml-clib
-        # ^ all not-pure python packages should be added as unsafe
-        language: python
-        additional_dependencies:
-          - pip-tools>=6.9.0
-        files: ^_build/requirements\.(in|txt)$
-        pass_filenames: false
-        language_version: "3.11"
-        stages: [manual]
-        verbose: true
