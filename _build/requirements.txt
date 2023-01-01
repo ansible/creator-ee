@@ -1,4 +1,4 @@
-ansible-lint[lock]==6.10.1
+ansible-lint[lock]==6.10.2
 molecule==4.0.4
 molecule-podman==2.0.3
 paramiko==2.12.0  # https://github.com/ansible/creator-ee/issues/140
