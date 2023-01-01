@@ -22,7 +22,10 @@ RUN \
 pip3 install --compile --only-binary :all: \
 -r requirements.txt && \
 mkdir -p ~/.ansible/roles && \
-rm -rf $(pip3 cache dir)
+rm -rf $(pip3 cache dir) && \
+# Avoid "fatal: detected dubious ownership in repository at" with newer git versions
+# See https://github.com/actions/runner-images/issues/6775
+git config --global --add safe.directory /
 
 # In OpenShift, container will run as a random uid number and gid 0. Make sure things
 # are writeable by the root group.
