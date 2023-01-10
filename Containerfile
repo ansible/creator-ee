@@ -51,6 +51,7 @@ COPY collections/ /usr/share/ansible/collections
 RUN set -ex \
 && ansible --version \
 && ansible-lint --version \
+&& ansible-runner --version \
 && molecule --version \
 && molecule drivers \
 && podman --version \
