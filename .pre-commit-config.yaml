@@ -37,7 +37,7 @@ repos:
         types: [file, yaml]
         entry: yamllint --strict
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.8.0.4
+    rev: v0.9.0.2
     hooks:
       - id: shellcheck
         args:
