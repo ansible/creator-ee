@@ -59,6 +59,8 @@ RUN set -ex \
 && git --version \
 && ansible-galaxy role list \
 && ansible-galaxy collection list \
+&& rpm -qa \
+&& rom -qa | grep python \
 && uname -a
 
 ADD _build/entrypoint.sh /bin/entrypoint
