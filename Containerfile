@@ -25,7 +25,7 @@ mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 rm -rf $(pip3 cache dir) && \
 # Avoid "fatal: detected dubious ownership in repository at" with newer git versions
 # See https://github.com/actions/runner-images/issues/6775
-git config --global --add safe.directory /
+git config --system --add safe.directory /
 
 # In OpenShift, container will run as a random uid number and gid 0. Make sure things
 # are writeable by the root group.

@@ -16,3 +16,5 @@ podman run -i --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
 podman run -i --user="$(id -u)" "$CNT" uname -a
 podman run -i --user="$(id -u)" "$CNT" bash -c 'set | grep PATH'
 podman run -i --user="$(id -u)" "$CNT" command -v ansible-lint
+# ensure that git is configured to consider any directory safe:
+podman run -i --user="$(id -u)" "$CNT" bash -c '[[ $(git config safe.directory) == "/" ]]'
