@@ -22,3 +22,6 @@ podman run -i --user="$(id -u)" "$CNT" command -v ansible-lint
 podman run -i --user="$(id -u)" "$CNT" bash -c 'rpm -qa | grep python'
 # ansible-runner is needed in all execution environment images
 podman run -i --user="$(id -u)" "$CNT" ansible-runner --version
+
+# ensure that git is configured to consider any directory safe:
+podman run -i --user="$(id -u)" "$CNT" bash -c '[[ $(git config safe.directory) == "/" ]]'
