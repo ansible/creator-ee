@@ -73,7 +73,7 @@ tasks:
       - ansible-galaxy collection install -r _build/requirements.yml -p collections
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
       - podman image exists {{.CNT_NAME_TAG}} && podman image rm {{.CNT_NAME_TAG}} || true
-      - podman buildx build ${EXTRA_OPTS:-} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
+      - podman buildx build ${EXTRA_OPTS:---platform linux/amd64,linux/arm64} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
       # published manifest instead of using the local one.
