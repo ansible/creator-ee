@@ -20,5 +20,5 @@ podman run -i --user="$(id -u)" "$CNT" command -v ansible-lint
 # Ensure some packages required are present
 # navigator requires the rpm db be intact as it run rpm -qa
 podman run -i --user="$(id -u)" "$CNT" rpm -qa | grep python
-# ansible-runner is needed for all ee's
+# ansible-runner is needed in every EE
 podman run -i --user="$(id -u)" "$CNT" ansible-runner --version
