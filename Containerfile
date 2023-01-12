@@ -59,6 +59,7 @@ RUN set -ex \
 && git --version \
 && ansible-galaxy role list \
 && ansible-galaxy collection list \
+&& rpm -qa \
 && uname -a
 
 ADD _build/entrypoint.sh /bin/entrypoint
