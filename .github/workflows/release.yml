@@ -22,7 +22,7 @@ jobs:
           - release
 
     env:
-      EXTRA_OPTS: --jobs=4 --platform linux/amd64,linux/arm64
+      EXTRA_OPTS: --jobs=4 --platform=linux/amd64,linux/arm64
       EXPECTED_IMAGES: 2
 
     steps:

@@ -25,3 +25,6 @@ podman run -i --user="$(id -u)" "$CNT" ansible-runner --version
 
 # ensure that git is configured to consider any directory safe:
 podman run -i --user="$(id -u)" "$CNT" bash -c '[[ $(git config safe.directory) == "/" ]]'
+
+# ensure that the image is build for both supported architectures and the manifest is correct
+podman manifest inspect "$CNT" | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"
