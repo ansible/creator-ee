@@ -1,6 +1,11 @@
 name: update-base
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "base/**"
   schedule:
     # Sunday at 2am UTC
     - cron: "0 2 * * 0"
