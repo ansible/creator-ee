@@ -25,8 +25,8 @@ jobs:
 
     env:
       # We use this option only on release pipeline due to the heavy cost
-      # EXTRA_OPTS: --platform linux/amd64,linux/arm64
-      EXPECTED_IMAGES: 1
+      EXTRA_OPTS: --platform=linux/amd64,linux/arm64
+      EXPECTED_IMAGES: 2
 
     steps:
       - name: Grab the source from Git
