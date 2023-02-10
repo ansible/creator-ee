@@ -1,4 +1,4 @@
-ansible-lint[lock]==6.11.0
+ansible-lint[lock]==6.12.2
 ansible-runner==2.3.1
 molecule==4.0.4
 molecule-podman==2.0.3
