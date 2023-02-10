@@ -17,7 +17,7 @@ microdnf update -y && \
 microdnf -y upgrade && \
 microdnf install -y \
 dumb-init \
-git \
+git-core \
 podman \
 python3 \
 python3-bcrypt \
@@ -31,6 +31,4 @@ python3-pyrsistent \
 python3-pyyaml \
 python3-ruamel-yaml \
 python3-wheel \
-&& microdnf clean all \
-# See https://lwn.net/Articles/881107/
-&& rm -rf /usr/lib/sysimage/rpm
+&& microdnf clean all

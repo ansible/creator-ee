@@ -25,13 +25,13 @@ COPY _build/devtools-publish /usr/local/bin/devtools-publish
 COPY _build/shells /etc/shells
 COPY _build/.bashrc /home/runner/.bashrc
 RUN \
-pip3 install --compile --only-binary :all: \
+pip3 install --progress-bar=off --compile --only-binary :all: \
 -r requirements.txt && \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 rm -rf $(pip3 cache dir) && \
 # Avoid "fatal: detected dubious ownership in repository at" with newer git versions
 # See https://github.com/actions/runner-images/issues/6775
-git config --global --add safe.directory / && \
+git config --system --add safe.directory / && \
   # Create bashrc file with colored prompt using container name
 printf "export CONTAINER_NAME=$CONTAINER_NAME\n" >> /home/runner/.bashrc
 
@@ -59,6 +59,7 @@ COPY collections/ /usr/share/ansible/collections
 RUN set -ex \
 && ansible --version \
 && ansible-lint --version \
+&& ansible-runner --version \
 && molecule --version \
 && molecule drivers \
 && podman --version \
@@ -66,6 +67,7 @@ RUN set -ex \
 && git --version \
 && ansible-galaxy role list \
 && ansible-galaxy collection list \
+&& rpm -qa \
 && uname -a
 
 ADD _build/entrypoint.sh /bin/entrypoint

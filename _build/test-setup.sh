@@ -129,7 +129,7 @@ python3 -c "import os, stat, sys; sys.exit(os.stat('.').st_mode & stat.S_IWOTH)"
 }
 
 python3 -m pre_commit --version >/dev/null 2>&1 || {
-    python3 -m pip install -q pre-commit ansible-core
+    python3 -m pip install -q --progress-bar=off pre-commit ansible-core
 }
 
 # Detect podman and ensure that it is usable (unless SKIP_PODMAN)
