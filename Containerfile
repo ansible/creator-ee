@@ -27,7 +27,7 @@ COPY _build/.bashrc /home/runner/.bashrc
 RUN \
 microdnf install --assumeyes ncurses && \
 microdnf clean all && \
-pip3 install --progress-bar=off --compile --only-binary :all: \
+pip3 install --progress-bar=off \
 -r requirements.txt && \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 rm -rf $(pip3 cache dir) && \
