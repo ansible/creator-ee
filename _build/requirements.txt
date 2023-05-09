@@ -1,6 +1,6 @@
 ansible-runner==2.3.2
 ansible-lint[lock]==6.16.0
-molecule==4.0.4
+molecule==5.0.1
 molecule-podman==2.0.3
 paramiko==3.1.0  # https://github.com/ansible/creator-ee/issues/140
 jmespath==1.0.1  # needed for json_query module
