@@ -13,6 +13,7 @@ LABEL org.opencontainers.image.licenses "GPL-3.0"
 USER root
 
 RUN \
+rm /etc/yum.repos.d/fedora-cisco-openh264.repo && \
 microdnf -y upgrade && \
 microdnf install -y \
 dumb-init \
@@ -28,6 +29,7 @@ python3-pip \
 python3-pynacl \
 python3-pyrsistent \
 python3-pyyaml \
-python3-ruamel-yaml \
 python3-wheel \
+# we need 0.27 version of clib which is still in testing
+&& microdnf --enablerepo=updates-testing install -y python3-ruamel-yaml-clib \
 && microdnf clean all
