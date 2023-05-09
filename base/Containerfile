@@ -1,7 +1,7 @@
 # Builds devtools base image "creator-base" which pre-installs python and all
 # binary dependencies. This makes each derived image much faster to build, even
 # when using QEMU emulation.
-ARG EE_BASE_IMAGE=quay.io/fedora/fedora-minimal:37
+ARG EE_BASE_IMAGE=quay.io/fedora/fedora-minimal:38
 FROM $EE_BASE_IMAGE
 
 # https://github.com/opencontainers/image-spec/blob/main/annotations.md
@@ -13,7 +13,6 @@ LABEL org.opencontainers.image.licenses "GPL-3.0"
 USER root
 
 RUN \
-microdnf update -y && \
 microdnf -y upgrade && \
 microdnf install -y \
 dumb-init \
