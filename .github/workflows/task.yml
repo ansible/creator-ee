@@ -14,7 +14,7 @@ concurrency:
 jobs:
   task:
     name: ${{ matrix.command }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest-4-cores
 
     strategy:
       fail-fast: false
