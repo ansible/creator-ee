@@ -1,5 +1,5 @@
 ansible-runner==2.3.2
-ansible-lint[lock]==6.15.0
+ansible-lint[lock]==6.16.1
 molecule==5.0.1
 molecule-plugins[podman]==23.4.1
 paramiko==3.1.0  # https://github.com/ansible/creator-ee/issues/140
