@@ -6,6 +6,7 @@ updates:
       interval: daily
     labels:
       - dependabot-deps-updates
+      - skip-changelog
     allow:
       - dependency-type: all
   - package-ecosystem: "github-actions"
@@ -14,5 +15,5 @@ updates:
       interval: daily
     open-pull-requests-limit: 3
     labels:
-      - "dependencies"
-      - "skip-changelog"
+      - dependencies
+      - skip-changelog
