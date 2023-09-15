@@ -1,5 +1,5 @@
 ansible-pylibssh==1.1.0
-ansible-runner==2.3.3
+ansible-runner==2.3.4
 ansible-lint[lock]==6.19.0
 molecule==6.0.2
 molecule-plugins[podman]==23.4.1
