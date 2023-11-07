@@ -81,6 +81,9 @@ tasks:
       # Fail if the manifest does not contain exactly two images
       # Validate image
       - ./_build/validate {{.CNT_NAME_TAG}}
+      # Without next step, podman will pull the base image from quay.io instead
+      # of using the locally built image when we chain: task base && task build
+      - podman tag localhost/{{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME}}:latest
       - touch .task/.{{.CNT_NAME}}.done
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
