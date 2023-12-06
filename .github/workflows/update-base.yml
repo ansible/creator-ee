@@ -41,7 +41,7 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           # keep this in sync with python version from base container
           python-version: "3.12" # 3.12 is default on fedora-39
