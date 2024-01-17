@@ -91,7 +91,7 @@ if [[ "${OS:-}" == "darwin" && "${SKIP_PODMAN:-}" != '1' ]]; then
         time podman machine init
         time podman machine start
         podman info
-        podman run hello-world
+        podman run --arch="$(arch)" --rm hello-world
     }
 fi
 
@@ -148,6 +148,9 @@ if [[ "${PODMAN_VERSION}" != 'null' ]] && [[ "${SKIP_PODMAN:-}" != '1' ]]; then
         echo .
     fi
 fi
+# verify podman ability to execute multi-arch commands:
+podman run --arch=arm64 -qit bash arch
+podman run --arch=amd64 -qit bash arch
 
 # Create a build manifest so we can compare between builds and machines, this
 # also has the role of ensuring that the required executables are present.

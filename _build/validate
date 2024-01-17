@@ -7,24 +7,24 @@ CNT=${1:-quay.io/ansible/creator-ee:latest}
 
 # creator-base container is expected to have python3
 if [[ "$CNT" == *"creator-base"* ]]; then
-  podman run -i "$CNT" python3 --version
+  podman run --arch="$(arch)" --rm -i "$CNT" python3 --version
   exit 0
 fi
 # Do not use `-t` (interactive) with podman, especially inside scripts/automation as it is
 # likely to cause problems.
-podman run -i --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
-podman run -i --user="$(id -u)" "$CNT" uname -a
-podman run -i --user="$(id -u)" "$CNT" bash -c 'set | grep PATH'
-podman run -i --user="$(id -u)" "$CNT" command -v ansible-lint
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" -e EP_DEBUG=1 "$CNT" uname -a
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" uname -a
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" bash -c 'set | grep PATH'
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" command -v ansible-lint
 
 # ensure that git is configured to consider any directory safe:
-podman run -i --user="$(id -u)" "$CNT" bash -c '[[ $(git config safe.directory) == "/" ]]'
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" bash -c '[[ $(git config safe.directory) == "/" ]]'
 
 # Ensure some packages required are present
 # navigator requires the rpm db be intact as it runs rpm -qa
-podman run -i --user="$(id -u)" "$CNT" bash -c 'rpm -qa | grep python'
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" bash -c 'rpm -qa | grep python'
 # ansible-runner is needed in all execution environment images
-podman run -i --user="$(id -u)" "$CNT" ansible-runner --version
+podman run --arch="$(arch)" --rm -i --user="$(id -u)" "$CNT" ansible-runner --version
 
 # ensure that the image is build for both supported architectures and the manifest is correct
 podman manifest inspect "$CNT" | jq '.manifests | length' | grep -q "${EXPECTED_IMAGES:-2}"

@@ -29,9 +29,11 @@ tasks:
       - echo Done {{.VERSION}}!
   base:
     desc: Build base image
+    deps:
+      - setup
     sources:
       - base/*
-      - .task/.{{.CNT_NAME}}.done
+      - .{{.CNT_NAME}}.done
     vars: &base-vars
       VERSION: "latest"
       CNT_NAME: creator-base
@@ -40,24 +42,44 @@ tasks:
       CNT_ROOT: base/
       RELEASE_PRECHECK: "true"
     cmds:
-      - task: build
-        vars: *base-vars
+      - podman container prune -f
+      - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
+      - podman image exists {{.CNT_NAME_TAG}} && podman image rm -f {{.CNT_NAME_TAG}} || true
+      - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64} --load {{.CNT_ROOT}} --manifest localhost/{{.CNT_NAME_TAG}}
+      # running manifest exists is mandatory as this fails if no manifest is
+      # created locally. If this is skipped the inspect might pull the last
+      # published manifest instead of using the local one.
+      - podman manifest exists {{.CNT_NAME_TAG}}
+      # Fail if the manifest does not contain exactly two images
+      # Validate image
+      - ./_build/validate {{.CNT_NAME_TAG}}
+      # Without next step, podman will pull the base image from quay.io instead
+      # of using the locally built image when we chain: task base && task build
+      - podman tag localhost/{{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME}}:latest
+      - touch .{{.CNT_NAME}}.done
+      - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     interactive: true
   clean:
     desc: Clean up all files that not tracked by git
     cmds:
       - git clean -dxf
+      # will clean cached images to ensure podman will rebuild containers instead of using a cached result
+      - podman image prune -f
   setup:
     desc: Install dependencies
     env:
       # used inside test-setup.sh
       OS: "{{OS}}"
       ARCH: "{{ARCH}}"
+      # needed to avoid warning about installing from galaxy
+      ANSIBLE_COLLECTIONS_PATH: collections
     cmds:
       - bash ./_build/test-setup.sh
+      - ansible-galaxy collection install -r _build/requirements.yml -p collections
     sources:
-      - _build/test-setup.sh
       - Taskfile.yml
+      - _build/requirements.yml
+      - _build/test-setup.sh
     generates:
       - out/log/manifest.yml
     run: once
@@ -66,13 +88,11 @@ tasks:
     desc: Build the project
     deps:
       - setup
-    env:
-      # needed to avoid warning about installing from galaxy
-      ANSIBLE_COLLECTIONS_PATH: collections
+      - base
     cmds:
-      - ansible-galaxy collection install -r _build/requirements.yml -p collections
+      - podman container prune -f
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
-      - podman image exists {{.CNT_NAME_TAG}} && podman image rm {{.CNT_NAME_TAG}} || true
+      - podman image exists {{.CNT_NAME_TAG}} && podman image rm -f {{.CNT_NAME_TAG}} || true
       - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64} --build-arg=CONTAINER_NAME={{.CNT_NAME_TAG}} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
@@ -84,7 +104,7 @@ tasks:
       # Without next step, podman will pull the base image from quay.io instead
       # of using the locally built image when we chain: task base && task build
       - podman tag localhost/{{.CNT_NAME_TAG}} quay.io/ansible/{{.CNT_NAME}}:latest
-      - touch .task/.{{.CNT_NAME}}.done
+      - touch .{{.CNT_NAME}}.done
       - echo "=== {{.CNT_NAME_TAG}} is ready! ==="
     sources:
       - Taskfile.yml
@@ -92,14 +112,14 @@ tasks:
       - _build/*
       - Containerfile
     generates:
-      - .task/.{{.CNT_NAME}}.done
+      - .{{.CNT_NAME}}.done
     interactive: true
   exec:
     desc: Open a container shell
     deps:
       - build
     cmds:
-      - podman run --rm -it {{.CNT_NAME_TAG}} /bin/bash
+      - podman run --arch=$(arch) --rm -it {{.CNT_NAME_TAG}} /bin/bash
     sources:
       - Taskfile.yml
     interactive: true
