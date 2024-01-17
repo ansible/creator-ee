@@ -16,7 +16,11 @@ RUN \
 microdnf -y upgrade && \
 microdnf install -y \
 dumb-init \
+# ansible-pylibssh needs:
+gcc \
 git-core \
+# ansible-pylibssh needs:
+libssh-devel \
 podman \
 python3 \
 python3-bcrypt \
@@ -30,4 +34,4 @@ python3-pyrsistent \
 python3-pyyaml \
 python3-ruamel-yaml \
 python3-wheel \
-&& microdnf clean all
+    && microdnf clean all
