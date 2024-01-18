@@ -2,9 +2,10 @@
 # see: https://github.com/yaml/pyyaml/issues/601
 cython>=3.0.5; python_version >= "3.12"
 # ordered:
+ansible-core==2.16.2
 ansible-pylibssh==1.1.0
 ansible-runner==2.3.4
-ansible-lint[lock]==6.22.2
+ansible-lint==6.22.2
 molecule==6.0.3
 molecule-plugins[podman]==23.5.0
 paramiko==3.3.1  # https://github.com/ansible/creator-ee/issues/140
