@@ -25,6 +25,8 @@ podman \
 python3 \
 python3-bcrypt \
 python3-cffi \
+# ansible-pylibssh needs:
+python3-devel \
 python3-markupsafe \
 # pypi has binaries with better security:
 # python3-cryptography \

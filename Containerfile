@@ -1,8 +1,9 @@
 # Overly simplified single stage build process: we take all binary dependencies
 # using dnf and use pip to install the rest.
 
-# this arg must be declared before FROM
-ARG EE_BASE_IMAGE=quay.io/ansible/creator-base:latest
+# this arg must be declared before FROM, also do not include registry part as
+# it seems to confuse podman and make it avoid using locally build base image.
+ARG EE_BASE_IMAGE=creator-base:latest
 FROM $EE_BASE_IMAGE
 # this arg must be declared after FROM
 ARG CONTAINER_NAME

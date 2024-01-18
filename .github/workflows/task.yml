@@ -47,12 +47,12 @@ jobs:
           cache: "pip"
 
       - name: Set cache for galaxy
-        uses: actions/cache@v3
-        if: "contains(matrix.command, 'build')"
+        uses: actions/cache@v4
         with:
           path: |
             collections
           key: galaxy-${{ hashFiles('_build/requirements.yml') }}
+          save-always: true
 
       - uses: dorny/paths-filter@v2
         id: changes
@@ -62,7 +62,7 @@ jobs:
               - 'base/**'
 
       - name: "Run: task base"
-        if: steps.changes.outputs.base == 'true'
+        if: steps.changes.outputs.base == 'true' && matrix.command == 'build'
         run: task base
 
       - name: "Run: task ${{ matrix.command }}"
