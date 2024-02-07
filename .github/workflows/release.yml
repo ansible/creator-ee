@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0 # needed to determine version
 
       - name: Install Task
-        uses: arduino/setup-task@v1
+        uses: arduino/setup-task@v2
         with:
           version: 3.x
           repo-token: ${{ secrets.GITHUB_TOKEN }}
