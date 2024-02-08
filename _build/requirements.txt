@@ -6,7 +6,7 @@ ansible-core==2.16.3
 ansible-pylibssh==1.1.0
 ansible-runner==2.3.4
 ansible-lint==24.2.0
-molecule==6.0.3
+molecule==24.2.0
 molecule-plugins[podman]==23.5.3
 paramiko==3.4.0  # https://github.com/ansible/creator-ee/issues/140
 jmespath==1.0.1  # needed for json_query module
