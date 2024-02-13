@@ -21,6 +21,8 @@ gcc \
 git-core \
 # ansible-pylibssh needs:
 libssh-devel \
+# ansible-navigator needs:
+oniguruma-devel \
 podman \
 python3 \
 python3-bcrypt \
