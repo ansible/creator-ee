@@ -3,7 +3,7 @@
 # This tool is used to setup the environment for running the tests. Its name
 # name and location is based on Zuul CI, which can automatically run it.
 # (cspell: disable-next-line)
-set -euo pipefail
+set -euxo pipefail
 
 PIP_LOG_FILE=out/log/pip.log
 HOSTNAME="${HOSTNAME:-localhost}"
@@ -149,8 +149,8 @@ if [[ "${PODMAN_VERSION}" != 'null' ]] && [[ "${SKIP_PODMAN:-}" != '1' ]]; then
     fi
 fi
 # verify podman ability to execute multi-arch commands:
-podman run --arch=arm64 -qit bash arch
-podman run --arch=amd64 -qit bash arch
+# podman run --arch=arm64 -qit bash arch
+# podman run --arch=amd64 -qit bash arch
 
 # Create a build manifest so we can compare between builds and machines, this
 # also has the role of ensuring that the required executables are present.

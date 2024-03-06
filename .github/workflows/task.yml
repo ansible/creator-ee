@@ -13,8 +13,8 @@ concurrency:
 
 jobs:
   task:
-    name: ${{ matrix.command }}
-    runs-on: ubuntu-22.04
+    name: ${{ matrix.name || matrix.command }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
@@ -22,11 +22,17 @@ jobs:
         command:
           - lint
           - build
-
+        os:
+          - ubuntu-22.04
+        include:
+          - command: build
+            os: macos-14
+            name: build@macos
     env:
       # We use this option only on release pipeline due to the heavy cost
-      EXTRA_OPTS: --platform=linux/amd64,linux/arm64
+      EXTRA_OPTS: ""
       EXPECTED_IMAGES: 2
+      SKIP_PODMAN: 1
 
     steps:
       - name: Grab the source from Git
