@@ -26,7 +26,7 @@ COPY _build/devtools-publish /usr/local/bin/devtools-publish
 COPY _build/shells /etc/shells
 COPY _build/.bashrc /home/runner/.bashrc
 RUN \
-microdnf install --assumeyes ncurses && \
+microdnf install --assumeyes ncurses rustc cargo openssl openssl-devel && \
 microdnf clean all && \
 pip3 install --progress-bar=off \
 -r requirements.txt && \

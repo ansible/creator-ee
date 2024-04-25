@@ -45,7 +45,7 @@ tasks:
       - podman container prune -f
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
       - podman image exists {{.CNT_NAME_TAG}} && podman image rm -f {{.CNT_NAME_TAG}} || true
-      - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64} --load {{.CNT_ROOT}} --manifest localhost/{{.CNT_NAME_TAG}}
+      - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64,linux/ppc64le,linux/s390x} --load {{.CNT_ROOT}} --manifest localhost/{{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
       # published manifest instead of using the local one.
@@ -93,7 +93,7 @@ tasks:
       - podman container prune -f
       - podman manifest exists {{.CNT_NAME_TAG}} && podman manifest rm {{.CNT_NAME_TAG}} || true
       - podman image exists {{.CNT_NAME_TAG}} && podman image rm -f {{.CNT_NAME_TAG}} || true
-      - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64} --build-arg=CONTAINER_NAME={{.CNT_NAME_TAG}} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
+      - podman buildx build ${EXTRA_OPTS:---platform=linux/amd64,linux/arm64,linux/ppc64le,linux/s390x} --build-arg=CONTAINER_NAME={{.CNT_NAME_TAG}} --load {{.CNT_ROOT}} --manifest {{.CNT_NAME_TAG}}
       # running manifest exists is mandatory as this fails if no manifest is
       # created locally. If this is skipped the inspect might pull the last
       # published manifest instead of using the local one.

@@ -151,6 +151,8 @@ fi
 # verify podman ability to execute multi-arch commands:
 podman run --arch=arm64 -qit bash arch
 podman run --arch=amd64 -qit bash arch
+podman run --arch=ppc64le -qit bash arch
+podman run --arch=s390x -qit bash arch
 
 # Create a build manifest so we can compare between builds and machines, this
 # also has the role of ensuring that the required executables are present.
