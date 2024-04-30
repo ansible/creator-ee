@@ -2,7 +2,7 @@
 # see: https://github.com/yaml/pyyaml/issues/601
 cython>=3.0.5; python_version >= "3.12"
 # ordered:
-ansible-dev-tools==24.2.0
+ansible-dev-tools==24.4.2
 ansible-pylibssh==1.1.0
 ansible-runner==2.3.6
 molecule-plugins[podman]==23.5.3
