@@ -54,12 +54,12 @@ jobs:
           password: ${{ github.token }}
           registry: ghcr.io/${{ github.repository_owner }}
 
-      - name: Log in to quay.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-          registry: quay.io
+      # - name: Log in to quay.io
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     username: ${{ secrets.QUAY_USERNAME }}
+      #     password: ${{ secrets.QUAY_TOKEN }}
+      #     registry: quay.io
 
       # - name: Log in to docker.io
       #   uses: redhat-actions/podman-login@v1
