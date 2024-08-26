@@ -1,5 +1,11 @@
 # Ansible Creator Execution Environment
 
+This image is no longer maintained.  Please try the new image:
+
+https://ansible.readthedocs.io/projects/dev-tools/container/
+
+---
+
 This is a container (execution environment) aimed towards being used
 for the development and testing of the Ansible content. We should also mention
 that this container must not be used in production by Ansible users.
